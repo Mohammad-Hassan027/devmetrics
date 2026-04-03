@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 interface NavbarProps {
   onLogoClick: () => void;
 }
@@ -8,16 +10,18 @@ export default function Navbar({ onLogoClick }: NavbarProps) {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <button
+          {/* Logo */}
+          <Link
+            to="/"
             id="navbar-logo"
             onClick={onLogoClick}
             className="flex items-center gap-2.5 group focus:outline-none"
             aria-label="Go to home"
           >
             <div className="relative">
-              <div className="w-8 h-8 bg-gradient-to-br from-brand-500 to-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-brand-900/50 group-hover:shadow-brand-700/40 transition-shadow duration-300">
+              <div className="w-8 h-8 bg-surface-900 border border-white/10 rounded-lg flex items-center justify-center shadow-md group-hover:border-brand-500/50 transition-colors duration-300">
                 <svg
-                  className="w-4.5 h-4.5 text-white"
+                  className="w-4.5 h-4.5 text-brand-500"
                   width="18"
                   height="18"
                   viewBox="0 0 24 24"
@@ -30,36 +34,36 @@ export default function Navbar({ onLogoClick }: NavbarProps) {
                   <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
                 </svg>
               </div>
-              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-brand-400 rounded-full ring-2 ring-surface-900" />
+              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-brand-500 rounded-full ring-2 ring-surface-900" />
             </div>
-            <span className="text-xl font-bold text-white tracking-tight group-hover:text-brand-300 transition-colors duration-200">
-              Dev<span className="text-brand-400">Metrics</span>
+            <span className="text-xl font-bold text-white tracking-tight group-hover:text-slate-200 transition-colors duration-200">
+              Dev<span className="text-brand-500">Metrics</span>
             </span>
-          </button>
+          </Link>
 
           {/* Nav links */}
           <nav className="hidden sm:flex items-center gap-6">
-            <a
-              href="#"
+            <Link
+              to="/features"
               id="nav-features"
               className="text-sm text-slate-400 hover:text-white transition-colors duration-200"
             >
               Features
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              to="/docs"
               id="nav-docs"
               className="text-sm text-slate-400 hover:text-white transition-colors duration-200"
             >
               Docs
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              to="/about"
               id="nav-about"
               className="text-sm text-slate-400 hover:text-white transition-colors duration-200"
             >
               About
-            </a>
+            </Link>
           </nav>
 
           {/* Right actions */}

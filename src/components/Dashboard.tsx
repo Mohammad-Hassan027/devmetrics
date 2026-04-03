@@ -43,10 +43,9 @@ export default function Dashboard({ usernames, onReset }: DashboardProps) {
             onClick={() => void exportImage()}
             disabled={exportState === "capturing" || isLoading}
             title="Export dashboard as PNG"
-            className="flex items-center gap-2 border border-white/10 hover:border-brand-500/40
-                       bg-surface-700/50 hover:bg-brand-900/40 text-slate-300 hover:text-brand-300
-                       text-sm font-medium px-4 py-2 rounded-xl transition-all duration-200
-                       disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 bg-surface-800 border border-white/10 hover:border-brand-500
+                       hover:text-brand-500 text-slate-300 text-sm font-medium px-4 py-2 rounded-xl transition-all duration-300
+                       disabled:opacity-50 disabled:cursor-not-allowed shadow-sm shadow-black/20"
           >
             {exportState === "capturing" ? (
               <>
@@ -111,10 +110,9 @@ export default function Dashboard({ usernames, onReset }: DashboardProps) {
             id="btn-reset"
             onClick={onReset}
             disabled={isLoading}
-            className="flex items-center gap-2 border border-white/10 hover:border-white/20
-                       bg-surface-700/50 hover:bg-surface-600/50 text-slate-300
-                       text-sm font-medium px-4 py-2 rounded-xl transition-all duration-200
-                       disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 bg-surface-800 border border-white/10 hover:border-slate-400
+                       hover:text-white text-slate-300 text-sm font-medium px-4 py-2 rounded-xl transition-all duration-300
+                       disabled:opacity-50 disabled:cursor-not-allowed shadow-sm shadow-black/20"
           >
             <svg
               className="w-4 h-4"
@@ -139,7 +137,7 @@ export default function Dashboard({ usernames, onReset }: DashboardProps) {
           <ProfilePill
             platform="GitHub"
             username={usernames.github}
-            color="bg-slate-700/60  text-slate-300  border-slate-600/40"
+            color="bg-surface-800 text-slate-200 border-white/10"
             status={stats.github.status}
           />
         )}
@@ -147,7 +145,7 @@ export default function Dashboard({ usernames, onReset }: DashboardProps) {
           <ProfilePill
             platform="LeetCode"
             username={usernames.leetcode}
-            color="bg-yellow-900/30 text-yellow-300 border-yellow-700/40"
+            color="bg-surface-800 text-slate-200 border-white/10"
             status={stats.leetcode.status}
           />
         )}
@@ -155,7 +153,7 @@ export default function Dashboard({ usernames, onReset }: DashboardProps) {
           <ProfilePill
             platform="GFG"
             username={usernames.gfg}
-            color="bg-green-900/30  text-green-300  border-green-700/40"
+            color="bg-surface-800 text-slate-200 border-white/10"
             status={stats.gfg.status}
           />
         )}
@@ -216,28 +214,28 @@ function GitHubSection({ stats }: { stats: DevStats }) {
       label: "Public Repos",
       value: data?.public_repos ?? null,
       icon: "📁",
-      color: "from-blue-500/20   to-blue-600/5",
+      color: "from-brand-500/10 to-transparent",
       badge: "Repositories",
     },
     {
       label: "Total Stars",
       value: data?.total_stars ?? null,
       icon: "⭐",
-      color: "from-yellow-500/20 to-yellow-600/5",
+      color: "from-brand-500/10 to-transparent",
       badge: "Stars Earned",
     },
     {
       label: "Followers",
       value: data?.followers ?? null,
       icon: "👥",
-      color: "from-purple-500/20 to-purple-600/5",
+      color: "from-brand-500/10 to-transparent",
       badge: "Community",
     },
     {
       label: "Following",
       value: data?.following ?? null,
       icon: "➡️",
-      color: "from-green-500/20  to-green-600/5",
+      color: "from-brand-500/10 to-transparent",
       badge: "Following",
     },
   ];
@@ -265,28 +263,28 @@ function LeetCodeSection({ stats }: { stats: DevStats }) {
       label: "Total Solved",
       value: data?.totalSolved ?? null,
       icon: "✅",
-      color: "from-yellow-500/20 to-yellow-600/5",
+      color: "from-brand-500/10 to-transparent",
       badge: "Total",
     },
     {
       label: "Easy",
       value: data?.easySolved ?? null,
       icon: "🟢",
-      color: "from-green-500/20  to-green-600/5",
+      color: "from-brand-500/10 to-transparent",
       badge: "Easy",
     },
     {
       label: "Medium",
       value: data?.mediumSolved ?? null,
       icon: "🟡",
-      color: "from-amber-500/20  to-amber-600/5",
+      color: "from-brand-500/10 to-transparent",
       badge: "Medium",
     },
     {
       label: "Hard",
       value: data?.hardSolved ?? null,
       icon: "🔴",
-      color: "from-red-500/20    to-red-600/5",
+      color: "from-brand-500/10 to-transparent",
       badge: "Hard",
     },
   ];
@@ -312,28 +310,28 @@ function GFGSection({ stats }: { stats: DevStats }) {
       label: "Problems Solved",
       value: data?.totalProblemsSolved ?? null,
       icon: "🧩",
-      color: "from-green-500/20   to-green-600/5",
+      color: "from-brand-500/10 to-transparent",
       badge: "Total",
     },
     {
       label: "Coding Score",
       value: data?.codingScore ?? null,
       icon: "🏆",
-      color: "from-emerald-500/20 to-emerald-600/5",
+      color: "from-brand-500/10 to-transparent",
       badge: "Score",
     },
     {
       label: "Current Streak",
       value: data?.currentStreak ?? null,
       icon: "🔥",
-      color: "from-orange-500/20  to-orange-600/5",
+      color: "from-brand-500/10 to-transparent",
       badge: "Days",
     },
     {
       label: "Institute Rank",
       value: data?.instituteRank ?? null,
       icon: "🎓",
-      color: "from-sky-500/20     to-sky-600/5",
+      color: "from-brand-500/10 to-transparent",
       badge: "Rank",
     },
   ];
