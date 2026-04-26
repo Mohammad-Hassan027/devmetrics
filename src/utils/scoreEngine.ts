@@ -28,7 +28,7 @@ export const BADGE_TIERS: BadgeInfo[] = [
     bg: "from-slate-700/60 to-slate-800/60",
     glow: "shadow-slate-900/40",
     border: "border-slate-600/40",
-    description: "Just getting started — the journey begins here.",
+    description: "Establishing a technical footprint. Initializing baseline metrics.",
   },
   {
     tier: "Explorer",
@@ -38,7 +38,7 @@ export const BADGE_TIERS: BadgeInfo[] = [
     bg: "from-blue-900/50 to-slate-800/60",
     glow: "shadow-blue-900/40",
     border: "border-blue-700/40",
-    description: "Actively exploring the coding landscape.",
+    description: "Expanding reach across platforms. Demonstrating consistent growth.",
   },
   {
     tier: "Contributor",
@@ -48,7 +48,7 @@ export const BADGE_TIERS: BadgeInfo[] = [
     bg: "from-cyan-900/50 to-blue-900/40",
     glow: "shadow-cyan-900/40",
     border: "border-cyan-700/40",
-    description: "Building momentum — solving problems consistently.",
+    description: "Substantial engineering output. Actively contributing to the ecosystem.",
   },
   {
     tier: "Achiever",
@@ -58,7 +58,7 @@ export const BADGE_TIERS: BadgeInfo[] = [
     bg: "from-purple-900/50 to-indigo-900/40",
     glow: "shadow-purple-900/50",
     border: "border-purple-600/50",
-    description: "Impressive track record across multiple platforms.",
+    description: "High-performance problem solver with a proven track record of excellence.",
   },
   {
     tier: "Expert",
@@ -68,7 +68,7 @@ export const BADGE_TIERS: BadgeInfo[] = [
     bg: "from-yellow-900/50 to-amber-900/40",
     glow: "shadow-yellow-900/50",
     border: "border-yellow-600/50",
-    description: "Top-tier developer — elite problem solver.",
+    description: "Elite technical proficiency. Demonstrating mastery in complex problem-solving.",
   },
   {
     tier: "Legend",
@@ -78,7 +78,7 @@ export const BADGE_TIERS: BadgeInfo[] = [
     bg: "from-orange-900/50 to-red-900/40",
     glow: "shadow-orange-900/50",
     border: "border-orange-500/60",
-    description: "Among the best — a true coding legend.",
+    description: "Distinguished engineering impact. Benchmarking at the top 0.1% of global talent.",
   },
 ];
 

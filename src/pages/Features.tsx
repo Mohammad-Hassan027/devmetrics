@@ -1,32 +1,63 @@
+import { Link, Trophy, BarChart3, Camera } from "lucide-react";
+
 export default function Features() {
   return (
-    <div className="animate-fade-in max-w-3xl mx-auto text-center">
-      <h1 className="text-4xl font-extrabold text-white mb-6 tracking-tight">Features</h1>
-      <p className="text-slate-400 text-lg mb-12 max-w-2xl mx-auto">
-        Everything you need to showcase your coding journey in one beautiful, shareable dashboard.
+    <div className="animate-fade-in max-w-5xl mx-auto text-center px-6">
+      <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
+        Capabilities
+      </h1>
+      <p className="text-slate-500 text-lg mb-16 max-w-2xl mx-auto font-medium">
+        A sophisticated toolkit designed to baseline and showcase your technical
+        development footprint.
       </p>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
-        <div className="glass-card p-6 group">
-          <div className="w-12 h-12 bg-surface-900 border border-white/10 text-slate-300 group-hover:text-brand-500 group-hover:border-brand-500/30 transition-colors duration-300 rounded-xl flex items-center justify-center text-2xl mb-4 shadow-sm">🔗</div>
-          <h3 className="text-xl font-bold text-white mb-2">Unified Profiles</h3>
-          <p className="text-slate-400 text-sm leading-relaxed">Combine your GitHub, LeetCode, and GeeksforGeeks stats into a single source of truth.</p>
-        </div>
-        <div className="glass-card p-6 group">
-          <div className="w-12 h-12 bg-surface-900 border border-white/10 text-slate-300 group-hover:text-brand-500 group-hover:border-brand-500/30 transition-colors duration-300 rounded-xl flex items-center justify-center text-2xl mb-4 shadow-sm">🏆</div>
-          <h3 className="text-xl font-bold text-white mb-2">Global Scoring</h3>
-          <p className="text-slate-400 text-sm leading-relaxed">Our proprietary engine calculates your rank, giving you a custom badge to show off to recruiters.</p>
-        </div>
-        <div className="glass-card p-6 group">
-          <div className="w-12 h-12 bg-surface-900 border border-white/10 text-slate-300 group-hover:text-brand-500 group-hover:border-brand-500/30 transition-colors duration-300 rounded-xl flex items-center justify-center text-2xl mb-4 shadow-sm">📊</div>
-          <h3 className="text-xl font-bold text-white mb-2">Beautiful Analytics</h3>
-          <p className="text-slate-400 text-sm leading-relaxed">Responsive charts using Recharts visualize your problem-solving distribution across all platforms.</p>
-        </div>
-        <div className="glass-card p-6 group">
-          <div className="w-12 h-12 bg-surface-900 border border-white/10 text-slate-300 group-hover:text-brand-500 group-hover:border-brand-500/30 transition-colors duration-300 rounded-xl flex items-center justify-center text-2xl mb-4 shadow-sm">📸</div>
-          <h3 className="text-xl font-bold text-white mb-2">One-Click Export</h3>
-          <p className="text-slate-400 text-sm leading-relaxed">Capture your entire dashboard as a high-res retina PNG instantly.</p>
-        </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+        <CapabilityCard
+          icon={<Link className="w-6 h-6" strokeWidth={1.5} />}
+          title="Source Aggregation"
+          description="Consolidate your technical footprint from GitHub, LeetCode, and GFG into a single source of truth."
+        />
+        <CapabilityCard
+          icon={<Trophy className="w-6 h-6" strokeWidth={1.5} />}
+          title="Reputation Engine"
+          description="Our proprietary algorithm benchmarks your proficiency, assigning a verified tier based on real-world impact."
+        />
+        <CapabilityCard
+          icon={<BarChart3 className="w-6 h-6" strokeWidth={1.5} />}
+          title="Deep Insights"
+          description="Visualize problem-solving trajectories and repository health with high-fidelity distributed charts."
+        />
+        <CapabilityCard
+          icon={<Camera className="w-6 h-6" strokeWidth={1.5} />}
+          title="Retina Assets"
+          description="Generate high-resolution report cards optimized for technical portfolios and professional networks."
+        />
+      </div>
+    </div>
+  );
+}
+
+function CapabilityCard({
+  icon,
+  title,
+  description,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="glass-card p-10 group relative overflow-hidden flex flex-col items-start gap-6">
+      <div className="p-4 rounded-2xl bg-surface-900 border border-white/[0.03] text-slate-400 group-hover:text-brand-400 group-hover:border-brand-500/20 transition-all duration-500 shadow-inner">
+        {icon}
+      </div>
+      <div className="space-y-3">
+        <h3 className="text-2xl font-bold text-white tracking-tight">
+          {title}
+        </h3>
+        <p className="text-slate-500 leading-relaxed font-medium">
+          {description}
+        </p>
       </div>
     </div>
   );

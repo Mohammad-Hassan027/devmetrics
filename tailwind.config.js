@@ -8,6 +8,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace'],
       },
       colors: {
         brand: {
@@ -23,12 +24,12 @@ export default {
           900: '#7e240e',
         },
         surface: {
-          900: '#0a192f',
-          800: '#0c203b',
-          700: '#0f294c',
-          600: '#143560',
-          500: '#1a4376',
-          400: '#235591',
+          900: '#0C0C0C', // ultra dark background
+          800: '#121212', // standard card back
+          700: '#1A1A1A', // hover card back
+          600: '#2A2A2A', // borders
+          500: '#404040', // light borders
+          400: '#737373', // muted text
         },
       },
       backgroundImage: {

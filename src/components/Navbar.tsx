@@ -72,13 +72,13 @@ export default function Navbar({ onLogoClick }: NavbarProps) {
               id="nav-signin"
               className="hidden sm:block text-sm text-slate-400 hover:text-white transition-colors duration-200 focus:outline-none"
             >
-              Sign In
+              Log in
             </button>
             <button
               id="nav-getstarted"
               className="btn-primary text-sm px-4 py-2"
             >
-              Get Started
+              Get started
             </button>
           </div>
         </div>

@@ -43,13 +43,21 @@ function Footer() {
           © {new Date().getFullYear()} DevMetrics. Built for developers.
         </p>
         <div className="flex items-center gap-4 text-slate-600 text-sm">
-          <Link to="/privacy" className="hover:text-slate-400 transition-colors">
+          <Link
+            to="/privacy"
+            className="hover:text-slate-400 transition-colors"
+          >
             Privacy
           </Link>
           <Link to="/terms" className="hover:text-slate-400 transition-colors">
             Terms
           </Link>
-          <a href="https://github.com/Mohammad-Hassan027/devmetrics" target="_blank" rel="noreferrer" className="hover:text-slate-400 transition-colors">
+          <a
+            href="https://github.com/Mohammad-Hassan027/devmetrics"
+            target="_blank"
+            rel="noreferrer"
+            className="hover:text-slate-400 transition-colors"
+          >
             GitHub
           </a>
         </div>

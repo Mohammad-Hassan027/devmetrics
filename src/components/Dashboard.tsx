@@ -1,10 +1,27 @@
 import type { Usernames, DevStats, FetchStatus } from "../types";
 import { useDevMetrics } from "../context/DevMetricsContext";
 import { useExportDashboard } from "../hooks/useExportDashboard";
-import PlatformSection from "./PlatformSection";
-import type { StatDef } from "./PlatformSection";
+import PlatformSection, { type StatDef } from "./PlatformSection";
 import ChartsSection from "./charts/ChartsSection";
 import DeveloperScoreCard from "./DeveloperScoreCard";
+import { cn } from "../utils/cn";
+import { motion, AnimatePresence } from "framer-motion";
+import { Copy, Camera, CheckCircle2, RotateCcw } from "lucide-react";
+import { useState } from "react";
+import {
+  FolderGit2,
+  Star,
+  Users,
+  UserPlus,
+  Code2,
+  TerminalSquare,
+  Award,
+  Zap,
+  BookOpen,
+  Trophy,
+  Flame,
+  GraduationCap,
+} from "lucide-react";
 
 interface DashboardProps {
   usernames: Usernames;
@@ -18,126 +35,70 @@ export default function Dashboard({ usernames, onReset }: DashboardProps) {
   );
 
   return (
-    // exportRef attaches to the capture target
-    <div className="space-y-10" ref={exportRef}>
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+      className="space-y-12 w-full"
+      ref={exportRef}
+    >
       {/* ── Header ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-white">Your Dashboard</h2>
-          <p className="text-slate-500 text-sm mt-1">
-            {overallStatus === "loading" && "Fetching your stats…"}
-            {overallStatus === "success" && "All stats loaded successfully."}
-            {overallStatus === "partial" && "Some platforms failed to load."}
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-8 pb-4 border-b border-white/[0.03]">
+        <div className="space-y-1">
+          <h2 className="text-4xl font-bold text-white tracking-tight">
+            Performance Insights
+          </h2>
+          <p className="text-slate-500 text-sm font-medium tracking-wide">
+            {overallStatus === "loading" && "Synchronizing across platforms..."}
+            {overallStatus === "success" && "All systems operational. Data is up to date."}
+            {overallStatus === "partial" && "Partial sync completed. Some sources are unreachable."}
             {overallStatus === "error" &&
-              "All requests failed — check usernames."}
+              "Synchronization failed. Please verify your credentials."}
             {overallStatus === "idle" &&
-              "Aggregated stats across your connected platforms."}
+              "Aggregated intelligence from your connected technical footprints."}
           </p>
         </div>
 
         {/* Action buttons */}
-        <div className="self-start sm:self-auto flex items-center gap-2">
-          {/* Export button */}
+        <div className="self-start sm:self-auto flex items-center gap-4">
           <button
-            id="btn-export"
-            onClick={() => void exportImage()}
-            disabled={exportState === "capturing" || isLoading}
-            title="Export dashboard as PNG"
-            className="flex items-center gap-2 bg-surface-800 border border-white/10 hover:border-brand-500
-                       hover:text-brand-500 text-slate-300 text-sm font-medium px-4 py-2 rounded-xl transition-all duration-300
-                       disabled:opacity-50 disabled:cursor-not-allowed shadow-sm shadow-black/20"
-          >
-            {exportState === "capturing" ? (
-              <>
-                <svg
-                  className="animate-spin w-4 h-4"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  />
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8v8z"
-                  />
-                </svg>
-                Capturing…
-              </>
-            ) : exportState === "done" ? (
-              <>
-                <svg
-                  className="w-4 h-4 text-green-400"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-                Saved!
-              </>
-            ) : (
-              <>
-                <svg
-                  className="w-4 h-4"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-                Export PNG
-              </>
-            )}
-          </button>
-
-          {/* Change usernames button */}
-          <button
-            id="btn-reset"
             onClick={onReset}
             disabled={isLoading}
-            className="flex items-center gap-2 bg-surface-800 border border-white/10 hover:border-slate-400
-                       hover:text-white text-slate-300 text-sm font-medium px-4 py-2 rounded-xl transition-all duration-300
-                       disabled:opacity-50 disabled:cursor-not-allowed shadow-sm shadow-black/20"
+            className="flex items-center gap-2.5 bg-surface-800 border border-white/[0.03] hover:bg-surface-700
+                       hover:text-white text-slate-400 text-[11px] font-bold uppercase tracking-widest px-6 py-3.5 rounded-2xl transition-all duration-300 shadow-inner"
           >
-            <svg
-              className="w-4 h-4"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-              <path d="M3 3v5h5" />
-            </svg>
-            Change
+            <RotateCcw className="w-3.5 h-3.5" />
+            Update profiles
+          </button>
+          <button
+            onClick={() => void exportImage()}
+            disabled={exportState === "capturing" || isLoading}
+            className="flex items-center gap-2.5 bg-brand-600 hover:bg-brand-500 text-white
+                       text-[11px] font-bold uppercase tracking-widest px-6 py-3.5 rounded-2xl transition-all duration-300 shadow-xl shadow-brand-500/10"
+          >
+            {exportState === "capturing" ? (
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+              </motion.div>
+            ) : exportState === "done" ? (
+              <CheckCircle2 className="w-3.5 h-3.5" />
+            ) : (
+              <Camera className="w-3.5 h-3.5" />
+            )}
+            {exportState === "done" ? "Report saved" : "Share report"}
           </button>
         </div>
       </div>
 
       {/* ── Profile chips ── */}
-      <div className="glass-card p-4 flex flex-wrap gap-3">
+      <div className="flex flex-wrap gap-4">
         {usernames.github && (
           <ProfilePill
             platform="GitHub"
             username={usernames.github}
-            color="bg-surface-800 text-slate-200 border-white/10"
             status={stats.github.status}
           />
         )}
@@ -145,7 +106,6 @@ export default function Dashboard({ usernames, onReset }: DashboardProps) {
           <ProfilePill
             platform="LeetCode"
             username={usernames.leetcode}
-            color="bg-surface-800 text-slate-200 border-white/10"
             status={stats.leetcode.status}
           />
         )}
@@ -153,54 +113,130 @@ export default function Dashboard({ usernames, onReset }: DashboardProps) {
           <ProfilePill
             platform="GFG"
             username={usernames.gfg}
-            color="bg-surface-800 text-slate-200 border-white/10"
             status={stats.gfg.status}
           />
         )}
       </div>
 
-      {/* ── Developer Score Card ── */}
-      <DeveloperScoreCard />
+      <motion.div
+        layout
+        initial="hidden"
+        animate="visible"
+        variants={{
+          visible: {
+            transition: {
+              staggerChildren: 0.1,
+            },
+          },
+        }}
+        className="grid grid-cols-1 md:grid-cols-12 gap-12"
+      >
+        {/* ── Developer Score Card (Full Width Bento) ── */}
+        <motion.div
+          variants={{
+            hidden: { opacity: 0, scale: 0.98 },
+            visible: { opacity: 1, scale: 1 },
+          }}
+          className="col-span-1 md:col-span-12"
+        >
+          <DeveloperScoreCard />
+        </motion.div>
 
-      {/* ── Platform sections ── */}
-      {usernames.github && <GitHubSection stats={stats} />}
-      {usernames.leetcode && <LeetCodeSection stats={stats} />}
-      {usernames.gfg && <GFGSection stats={stats} />}
+        {/* ── Platform sections (Grid items) ── */}
+        <AnimatePresence mode="popLayout">
+          {usernames.github && (
+            <motion.div
+              layout
+              variants={{
+                hidden: { opacity: 0, scale: 0.95 },
+                visible: { opacity: 1, scale: 1 },
+              }}
+              key="github-section"
+              className="col-span-1 md:col-span-12 lg:col-span-8 xl:col-span-8"
+            >
+              <GitHubSection stats={stats} />
+            </motion.div>
+          )}
+          {usernames.leetcode && (
+            <motion.div
+              layout
+              variants={{
+                hidden: { opacity: 0, scale: 0.95 },
+                visible: { opacity: 1, scale: 1 },
+              }}
+              key="leetcode-section"
+              className="col-span-1 md:col-span-6 lg:col-span-4 xl:col-span-4"
+            >
+              <LeetCodeSection stats={stats} />
+            </motion.div>
+          )}
+          {usernames.gfg && (
+            <motion.div
+              layout
+              variants={{
+                hidden: { opacity: 0, scale: 0.95 },
+                visible: { opacity: 1, scale: 1 },
+              }}
+              key="gfg-section"
+              className="col-span-1 md:col-span-6 lg:col-span-12 xl:col-span-12"
+            >
+              <GFGSection stats={stats} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
 
       {/* ── Charts ── */}
-      <ChartsSection stats={stats} />
-    </div>
+      <div className="mt-8">
+        <ChartsSection stats={stats} />
+      </div>
+    </motion.div>
   );
 }
-
-// ─── Profile pill ─────────────────────────────────────────────────────────────
 
 function ProfilePill({
   platform,
   username,
-  color,
   status,
 }: {
   platform: string;
   username: string;
-  color: string;
   status: FetchStatus;
 }) {
+  const [copied, setCopied] = useState(false);
+
   const dot =
     status === "loading"
-      ? "bg-yellow-400 animate-pulse"
+      ? "bg-[#f59e0b] animate-pulse shadow-[0_0_8px_#f59e0b66]"
       : status === "success"
-        ? "bg-green-400"
+        ? "bg-[#10b981] shadow-[0_0_8px_#10b98166]"
         : status === "error"
-          ? "bg-red-400"
+          ? "bg-[#ef4444] shadow-[0_0_8px_#ef444466]"
           : "bg-slate-600";
 
+  const handleCopy = () => {
+    navigator.clipboard.writeText(username);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
-    <div className={`badge border ${color} gap-2`}>
-      <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dot}`} />
-      <span className="font-semibold">{platform}</span>
-      <span className="opacity-60">·</span>
-      <span>@{username}</span>
+    <div className="group inline-flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-sm font-medium border border-white/5 bg-surface-800 shadow-inner">
+      <span className={cn("w-1.5 h-1.5 rounded-full shrink-0", dot)} />
+      <span className="text-slate-300">{platform}</span>
+      <span className="text-slate-600">/</span>
+      <span className="text-white font-mono">@{username}</span>
+      <button
+        onClick={handleCopy}
+        className="ml-1 p-1 rounded-md text-slate-500 hover:text-white hover:bg-surface-600 transition-colors"
+        title="Copy identifier"
+      >
+        {copied ? (
+          <CheckCircle2 className="w-3.5 h-3.5 text-green-400" />
+        ) : (
+          <Copy className="w-3.5 h-3.5" />
+        )}
+      </button>
     </div>
   );
 }
@@ -213,29 +249,25 @@ function GitHubSection({ stats }: { stats: DevStats }) {
     {
       label: "Public Repos",
       value: data?.public_repos ?? null,
-      icon: "📁",
-      color: "from-brand-500/10 to-transparent",
+      icon: <FolderGit2 className="w-5 h-5" />,
       badge: "Repositories",
     },
     {
       label: "Total Stars",
       value: data?.total_stars ?? null,
-      icon: "⭐",
-      color: "from-brand-500/10 to-transparent",
+      icon: <Star className="w-5 h-5" />,
       badge: "Stars Earned",
     },
     {
       label: "Followers",
       value: data?.followers ?? null,
-      icon: "👥",
-      color: "from-brand-500/10 to-transparent",
+      icon: <Users className="w-5 h-5" />,
       badge: "Community",
     },
     {
       label: "Following",
       value: data?.following ?? null,
-      icon: "➡️",
-      color: "from-brand-500/10 to-transparent",
+      icon: <UserPlus className="w-5 h-5" />,
       badge: "Following",
     },
   ];
@@ -243,14 +275,18 @@ function GitHubSection({ stats }: { stats: DevStats }) {
     <PlatformSection
       id="section-github"
       title="GitHub"
-      username=""
+      username={data?.login ?? ""}
       status={status}
       error={error}
       avatar={data?.avatar_url}
       profileUrl={data?.html_url}
       bio={data?.bio ?? undefined}
       accentColor="border-l-blue-500"
-      icon={<GitHubIcon />}
+      icon={
+        <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+        </svg>
+      }
       stats={statDefs}
     />
   );
@@ -262,29 +298,25 @@ function LeetCodeSection({ stats }: { stats: DevStats }) {
     {
       label: "Total Solved",
       value: data?.totalSolved ?? null,
-      icon: "✅",
-      color: "from-brand-500/10 to-transparent",
+      icon: <Code2 className="w-5 h-5" />,
       badge: "Total",
     },
     {
       label: "Easy",
       value: data?.easySolved ?? null,
-      icon: "🟢",
-      color: "from-brand-500/10 to-transparent",
+      icon: <TerminalSquare className="w-5 h-5 text-green-400" />,
       badge: "Easy",
     },
     {
       label: "Medium",
       value: data?.mediumSolved ?? null,
-      icon: "🟡",
-      color: "from-brand-500/10 to-transparent",
+      icon: <TerminalSquare className="w-5 h-5 text-yellow-400" />,
       badge: "Medium",
     },
     {
       label: "Hard",
       value: data?.hardSolved ?? null,
-      icon: "🔴",
-      color: "from-brand-500/10 to-transparent",
+      icon: <TerminalSquare className="w-5 h-5 text-red-500" />,
       badge: "Hard",
     },
   ];
@@ -297,7 +329,7 @@ function LeetCodeSection({ stats }: { stats: DevStats }) {
       error={error}
       avatar={data?.avatar}
       accentColor="border-l-yellow-500"
-      icon={<LeetCodeIcon />}
+      icon={<Award className="w-6 h-6 text-yellow-500" />}
       stats={statDefs}
     />
   );
@@ -309,29 +341,25 @@ function GFGSection({ stats }: { stats: DevStats }) {
     {
       label: "Problems Solved",
       value: data?.totalProblemsSolved ?? null,
-      icon: "🧩",
-      color: "from-brand-500/10 to-transparent",
+      icon: <BookOpen className="w-5 h-5" />,
       badge: "Total",
     },
     {
       label: "Coding Score",
       value: data?.codingScore ?? null,
-      icon: "🏆",
-      color: "from-brand-500/10 to-transparent",
+      icon: <Trophy className="w-5 h-5" />,
       badge: "Score",
     },
     {
       label: "Current Streak",
       value: data?.currentStreak ?? null,
-      icon: "🔥",
-      color: "from-brand-500/10 to-transparent",
+      icon: <Flame className="w-5 h-5" />,
       badge: "Days",
     },
     {
       label: "Institute Rank",
       value: data?.instituteRank ?? null,
-      icon: "🎓",
-      color: "from-brand-500/10 to-transparent",
+      icon: <GraduationCap className="w-5 h-5" />,
       badge: "Rank",
     },
   ];
@@ -344,46 +372,8 @@ function GFGSection({ stats }: { stats: DevStats }) {
       error={error}
       avatar={data?.profilePicture}
       accentColor="border-l-green-500"
-      icon={<GFGIcon />}
+      icon={<Zap className="w-6 h-6 text-green-500" />}
       stats={statDefs}
     />
-  );
-}
-
-// ─── Icons ────────────────────────────────────────────────────────────────────
-
-function GitHubIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className="w-5 h-5 text-slate-300"
-    >
-      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
-    </svg>
-  );
-}
-
-function LeetCodeIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className="w-5 h-5 text-yellow-400"
-    >
-      <path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z" />
-    </svg>
-  );
-}
-
-function GFGIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className="w-5 h-5 text-green-400"
-    >
-      <path d="M21.45 14.315c-.143.28-.334.532-.565.745a3.691 3.691 0 0 1-1.104.695 4.51 4.51 0 0 1-.608.177 4.45 4.45 0 0 1-.668.073h-.066v.006H5.56v-.006h-.067a4.45 4.45 0 0 1-.668-.073 4.51 4.51 0 0 1-.608-.177 3.691 3.691 0 0 1-1.104-.695 2.933 2.933 0 0 1-.565-.745A2.628 2.628 0 0 1 2.243 13c0-.414.091-.8.305-1.129.21-.322.48-.569.78-.756a3.573 3.573 0 0 1-.307-1.645 3.578 3.578 0 0 1 .535-1.847A3.564 3.564 0 0 1 4.807 6.41a3.57 3.57 0 0 1 1.944-.53 3.57 3.57 0 0 1 2.405.919 4.6 4.6 0 0 1 2.844-.998 4.6 4.6 0 0 1 2.844.998 3.57 3.57 0 0 1 2.405-.92 3.57 3.57 0 0 1 1.945.531 3.564 3.564 0 0 1 1.25 1.213 3.578 3.578 0 0 1 .535 1.847 3.573 3.573 0 0 1-.307 1.645c.3.187.57.434.78.756.214.33.305.715.305 1.13 0 .466-.105.897-.307 1.314z" />
-    </svg>
   );
 }
