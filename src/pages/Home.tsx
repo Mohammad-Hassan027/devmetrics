@@ -3,13 +3,15 @@ import UsernameForm from "../components/UsernameForm";
 import Dashboard from "../components/Dashboard";
 import { motion } from "framer-motion";
 import { Activity } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 export default function Home() {
   const { usernames, clearUsernames } = useDevMetrics();
+  const { user, signInWithGoogle } = useAuth();
 
   return (
     <div className="relative w-full max-w-5xl mx-auto flex flex-col items-center">
-      {!usernames ? (
+      {!usernames && !user ? (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -18,7 +20,16 @@ export default function Home() {
           className="w-full flex flex-col items-center pt-10 pb-20"
         >
           <HeroSection />
-          <UsernameForm />
+          <div className="flex flex-col items-center gap-4">
+            <UsernameForm />
+            <div className="text-sm text-slate-400">or</div>
+            <button
+              onClick={() => signInWithGoogle()}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded bg-white/5 hover:bg-white/6 text-white text-sm"
+            >
+              Sign in with Google
+            </button>
+          </div>
         </motion.div>
       ) : (
         <Dashboard usernames={usernames} onReset={clearUsernames} />
@@ -63,7 +74,8 @@ function HeroSection() {
         transition={{ delay: 0.3, duration: 0.5 }}
         className="text-slate-400 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed font-medium"
       >
-        Sync your GitHub, LeetCode, and GFG profiles to baseline your technical reach and problem-solving distribution in one unified dashboard.
+        Sync your GitHub, LeetCode, and GFG profiles to baseline your technical
+        reach and problem-solving distribution in one unified dashboard.
       </motion.p>
     </div>
   );
