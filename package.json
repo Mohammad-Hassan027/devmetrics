@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "gen:supabase-types": "npx supabase gen types typescript --project-id $SUPABASE_PROJECT_ID --schema public --yes > src/types/supabase.ts",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "check": "tsc --noEmit",

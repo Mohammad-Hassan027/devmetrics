@@ -186,8 +186,10 @@ export function DevMetricsProvider({ children }: DevMetricsProviderProps) {
   );
 }
 
-export const EMPTY_STATS: DevStats = {
-  github: makeIdle(),
-  leetcode: makeIdle(),
-  gfg: makeIdle(),
-};
+export function getEmptyStats(): DevStats {
+  return {
+    github: makeIdle(),
+    leetcode: makeIdle(),
+    gfg: makeIdle(),
+  };
+}

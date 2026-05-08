@@ -1,13 +1,26 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
-const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
+// Minimal database type to avoid `any`. For full safety, generate types
+// using `supabase gen types typescript --project ...` and replace Database.
 
-// const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
+const supabaseMeta = import.meta as any;
+const supabaseUrl = supabaseMeta.env?.VITE_SUPABASE_URL as string | undefined;
+const supabaseKey = supabaseMeta.env?.VITE_SUPABASE_PUBLISHABLE_KEY as
+  | string
+  | undefined;
 
 if (!supabaseUrl || !supabaseKey) {
-  console.warn("VITE_SUPABASE_URL or VITE_SUPABASE_PUBLISHABLE_KEY is not set");
+  console.warn("VITE_SUPABASE_URL or VITE_SUPABASE_PUBLISHABLE_KEY missing");
 }
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+import type { Database } from "../types/supabase";
+
+export const supabase: SupabaseClient<Database> = createClient<Database>(
+  supabaseUrl ?? "",
+  supabaseKey ?? "",
+  {
+    auth: { persistSession: true, detectSessionInUrl: true },
+  },
+);
+
 export default supabase;
