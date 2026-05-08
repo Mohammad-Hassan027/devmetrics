@@ -24,14 +24,15 @@ import {
 } from "lucide-react";
 
 interface DashboardProps {
-  usernames: Usernames;
+  usernames: Usernames | null;
   onReset: () => void;
 }
 
 export default function Dashboard({ usernames, onReset }: DashboardProps) {
+  const localUsernames = usernames ?? { github: "", leetcode: "", gfg: "" };
   const { stats, isLoading, overallStatus } = useDevMetrics();
   const { exportRef, exportImage, exportState } = useExportDashboard(
-    `devmetrics-${usernames.github || usernames.leetcode || "dashboard"}.png`,
+    `devmetrics-${localUsernames.github || localUsernames.leetcode || "dashboard"}.png`,
   );
 
   return (
@@ -95,24 +96,24 @@ export default function Dashboard({ usernames, onReset }: DashboardProps) {
 
       {/* ── Profile chips ── */}
       <div className="flex flex-wrap gap-4">
-        {usernames.github && (
+        {localUsernames.github && (
           <ProfilePill
             platform="GitHub"
-            username={usernames.github}
+            username={localUsernames.github}
             status={stats.github.status}
           />
         )}
-        {usernames.leetcode && (
+        {localUsernames.leetcode && (
           <ProfilePill
             platform="LeetCode"
-            username={usernames.leetcode}
+            username={localUsernames.leetcode}
             status={stats.leetcode.status}
           />
         )}
-        {usernames.gfg && (
+        {localUsernames.gfg && (
           <ProfilePill
             platform="GFG"
-            username={usernames.gfg}
+            username={localUsernames.gfg}
             status={stats.gfg.status}
           />
         )}
@@ -144,7 +145,7 @@ export default function Dashboard({ usernames, onReset }: DashboardProps) {
 
         {/* ── Platform sections (Grid items) ── */}
         <AnimatePresence mode="popLayout">
-          {usernames.github && (
+          {localUsernames.github && (
             <motion.div
               layout
               variants={{
@@ -157,7 +158,7 @@ export default function Dashboard({ usernames, onReset }: DashboardProps) {
               <GitHubSection stats={stats} />
             </motion.div>
           )}
-          {usernames.leetcode && (
+          {localUsernames.leetcode && (
             <motion.div
               layout
               variants={{
@@ -170,7 +171,7 @@ export default function Dashboard({ usernames, onReset }: DashboardProps) {
               <LeetCodeSection stats={stats} />
             </motion.div>
           )}
-          {usernames.gfg && (
+          {localUsernames.gfg && (
             <motion.div
               layout
               variants={{

@@ -1,7 +1,14 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 import { supabase } from "../services/supabase";
+import type { Session, User as SupabaseUser } from "@supabase/supabase-js";
 
-type User = {
+export type AuthUser = {
   id: string;
   email?: string;
   name?: string;
@@ -9,7 +16,7 @@ type User = {
 };
 
 type AuthContextType = {
-  user: User | null;
+  user: AuthUser | null;
   loading: boolean;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
@@ -17,62 +24,56 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+function safeString(v: unknown): string | undefined {
+  return typeof v === "string" && v.trim().length > 0 ? v : undefined;
+}
+
+function mapUser(u: SupabaseUser): AuthUser {
+  const meta = (u.user_metadata ?? {}) as Record<string, unknown>;
+  return {
+    id: u.id,
+    email: safeString(u.email),
+    name: safeString((meta.full_name as unknown) ?? (meta.name as unknown)),
+    avatar_url: safeString(meta.avatar_url) ?? undefined,
+  };
+}
+
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    let mounted = true;
+    let active = true;
 
     async function init() {
       setLoading(true);
       const { data, error } = await supabase.auth.getUser();
-      if (error) {
-        console.error("Error fetching user:", error);
-      }
-      if (!mounted) return;
-      if (data?.user) {
-        const u = data.user;
-        setUser({
-          id: u.id,
-          email: u.email ?? undefined,
-          name:
-            u.user_metadata?.full_name ?? u.user_metadata?.name ?? undefined,
-          avatar_url: u.user_metadata?.avatar_url ?? undefined,
-        });
-      }
+      if (error)
+        console.error("supabase.getUser error:", error.message ?? error);
+      if (!active) return;
+      if (data?.user) setUser(mapUser(data.user));
       setLoading(false);
     }
 
     init();
 
     const { data: listener } = supabase.auth.onAuthStateChange(
-      (_, session) => {
-        if (session?.user) {
-          const u = session.user;
-          setUser({
-            id: u.id,
-            email: u.email ?? undefined,
-            name:
-              (u.user_metadata)?.full_name ??
-              (u.user_metadata)?.name ??
-              undefined,
-            avatar_url: (u.user_metadata)?.avatar_url ?? undefined,
-          });
-        } else {
-          setUser(null);
-        }
+      (_event: string, session: Session | null) => {
+        if (session?.user) setUser(mapUser(session.user));
+        else setUser(null);
       },
     );
 
     return () => {
-      mounted = false;
-      // unsubscribe listener
-      // listener?.subscription?.unsubscribe is optional depending on SDK version
-      if ((listener)?.subscription?.unsubscribe)
-        (listener).subscription.unsubscribe();
+      active = false;
+      // SDK returns { subscription } with unsubscribe()
+      try {
+        (listener as any)?.subscription?.unsubscribe?.();
+      } catch {
+        // best-effort unsubscribe
+      }
     };
   }, []);
 
