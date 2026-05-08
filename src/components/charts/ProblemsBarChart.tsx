@@ -33,8 +33,8 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
   const d = payload[0];
   return (
     <div className="bg-surface-700 border border-white/10 rounded-xl px-4 py-2.5 shadow-xl text-sm">
-      <p className="text-slate-400 font-medium mb-1">{d.payload.platform}</p>
-      <p className="text-white font-bold text-base">{d.value} solved</p>
+      <p className="mb-1 font-medium text-slate-400">{d.payload.platform}</p>
+      <p className="text-base font-bold text-white">{d.value} solved</p>
     </div>
   );
 }
@@ -49,7 +49,7 @@ function SkeletonBars() {
         <div
           key={i}
           style={{ height: `${h}%` }}
-          className="flex-1 bg-surface-500/40 rounded-t-lg animate-pulse"
+          className="flex-1 rounded-t-lg bg-surface-500/40 animate-pulse"
         />
       ))}
     </div>
@@ -63,6 +63,7 @@ const CHART_HEIGHT = 224; // px — h-56 equivalent
 export default function ProblemsBarChart({ stats }: ProblemsBarChartProps) {
   const lcData = stats.leetcode.data;
   const gfgData = stats.gfg.data;
+  const gfgSolved = gfgData?.solvedStats;
   const isLoading =
     stats.leetcode.status === "loading" || stats.gfg.status === "loading";
   const hasAny = lcData || gfgData;
@@ -84,29 +85,29 @@ export default function ProblemsBarChart({ stats }: ProblemsBarChartProps) {
       : []),
     ...(gfgData
       ? ([
-          gfgData.solvedStats.school && {
+          gfgSolved?.school && {
             platform: "GFG School",
-            solved: gfgData.solvedStats.school.count,
+            solved: gfgSolved.school.count,
             fill: "#a78bfa",
           },
-          gfgData.solvedStats.basic && {
+          gfgSolved?.basic && {
             platform: "GFG Basic",
-            solved: gfgData.solvedStats.basic.count,
+            solved: gfgSolved.basic.count,
             fill: "#60a5fa",
           },
-          gfgData.solvedStats.easy && {
+          gfgSolved?.easy && {
             platform: "GFG Easy",
-            solved: gfgData.solvedStats.easy.count,
+            solved: gfgSolved.easy.count,
             fill: "#34d399",
           },
-          gfgData.solvedStats.medium && {
+          gfgSolved?.medium && {
             platform: "GFG Medium",
-            solved: gfgData.solvedStats.medium.count,
+            solved: gfgSolved.medium.count,
             fill: "#f59e0b",
           },
-          gfgData.solvedStats.hard && {
+          gfgSolved?.hard && {
             platform: "GFG Hard",
-            solved: gfgData.solvedStats.hard.count,
+            solved: gfgSolved.hard.count,
             fill: "#f87171",
           },
         ].filter(Boolean) as BarDatum[])
@@ -114,7 +115,7 @@ export default function ProblemsBarChart({ stats }: ProblemsBarChartProps) {
   ];
 
   return (
-    <div className="glass-card p-6 flex flex-col gap-5" id="chart-bar">
+    <div className="flex flex-col gap-5 p-6 glass-card" id="chart-bar">
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
@@ -190,7 +191,7 @@ export default function ProblemsBarChart({ stats }: ProblemsBarChartProps) {
                 className="w-2.5 h-2.5 rounded-sm inline-block"
                 style={{ backgroundColor: color }}
               />
-              <span className="text-slate-500 text-xs">{label}</span>
+              <span className="text-xs text-slate-500">{label}</span>
             </div>
           ))}
         </div>
@@ -201,7 +202,7 @@ export default function ProblemsBarChart({ stats }: ProblemsBarChartProps) {
 
 function EmptyChart({ message }: { message: string }) {
   return (
-    <div className="h-full flex flex-col items-center justify-center gap-2 text-slate-600">
+    <div className="flex flex-col items-center justify-center h-full gap-2 text-slate-600">
       <svg
         className="w-8 h-8 opacity-40"
         viewBox="0 0 24 24"

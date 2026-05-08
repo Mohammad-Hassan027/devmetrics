@@ -113,13 +113,13 @@ export default function DistributionPieChart({
   // Aggregate totals per difficulty across both platforms
   const easy =
     (lcData?.easySolved ?? 0) +
-    (gfgData?.solvedStats.easy?.count ?? 0) +
-    (gfgData?.solvedStats.school?.count ?? 0) +
-    (gfgData?.solvedStats.basic?.count ?? 0);
+    (gfgData?.solvedStats?.easy?.count ?? 0) +
+    (gfgData?.solvedStats?.school?.count ?? 0) +
+    (gfgData?.solvedStats?.basic?.count ?? 0);
   const medium =
-    (lcData?.mediumSolved ?? 0) + (gfgData?.solvedStats.medium?.count ?? 0);
+    (lcData?.mediumSolved ?? 0) + (gfgData?.solvedStats?.medium?.count ?? 0);
   const hard =
-    (lcData?.hardSolved ?? 0) + (gfgData?.solvedStats.hard?.count ?? 0);
+    (lcData?.hardSolved ?? 0) + (gfgData?.solvedStats?.hard?.count ?? 0);
   const total = easy + medium + hard;
 
   const pieData: PieDatum[] = [
