@@ -3,15 +3,13 @@ import UsernameForm from "../components/UsernameForm";
 import Dashboard from "../components/Dashboard";
 import { motion } from "framer-motion";
 import { Activity } from "lucide-react";
-import { useAuth } from "../context/AuthContext";
 
 export default function Home() {
   const { usernames, clearUsernames } = useDevMetrics();
-  const { user, signInWithGoogle } = useAuth();
 
   return (
     <div className="relative w-full max-w-5xl mx-auto flex flex-col items-center">
-      {!usernames && !user ? (
+      {!usernames ? (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -22,13 +20,6 @@ export default function Home() {
           <HeroSection />
           <div className="flex flex-col items-center gap-4">
             <UsernameForm />
-            <div className="text-sm text-slate-400">or</div>
-            <button
-              onClick={() => signInWithGoogle()}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded bg-white/5 hover:bg-white/6 text-white text-sm"
-            >
-              Sign in with Google
-            </button>
           </div>
         </motion.div>
       ) : (

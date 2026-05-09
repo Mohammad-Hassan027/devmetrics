@@ -49,11 +49,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
     async function init() {
       setLoading(true);
-      const { data, error } = await supabase.auth.getUser();
-      if (error)
-        console.error("supabase.getUser error:", error.message ?? error);
+      // Check session first to avoid "Auth session missing" error
+      const { data: sessionData } = await supabase.auth.getSession();
       if (!active) return;
-      if (data?.user) setUser(mapUser(data.user));
+      
+      if (sessionData?.session?.user) {
+        setUser(mapUser(sessionData.session.user));
+      } else {
+        setUser(null);
+      }
       setLoading(false);
     }
 

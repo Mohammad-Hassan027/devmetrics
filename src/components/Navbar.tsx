@@ -1,15 +1,18 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import UserProfileMenu from "./UserProfileMenu";
 
 interface NavbarProps {
   onLogoClick: () => void;
 }
 
 export default function Navbar({ onLogoClick }: NavbarProps) {
+  const { user, loading, signInWithGoogle } = useAuth();
+
   return (
     <header className="sticky top-0 z-50 border-b border-white/5 bg-surface-900/80 backdrop-blur-md">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+      <div className="container px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
           {/* Logo */}
           <Link
             to="/"
@@ -19,7 +22,7 @@ export default function Navbar({ onLogoClick }: NavbarProps) {
             aria-label="Go to home"
           >
             <div className="relative">
-              <div className="w-8 h-8 bg-surface-900 border border-white/10 rounded-lg flex items-center justify-center shadow-md group-hover:border-brand-500/50 transition-colors duration-300">
+              <div className="flex items-center justify-center w-8 h-8 transition-colors duration-300 border rounded-lg shadow-md bg-surface-900 border-white/10 group-hover:border-brand-500/50">
                 <svg
                   className="w-4.5 h-4.5 text-brand-500"
                   width="18"
@@ -36,50 +39,60 @@ export default function Navbar({ onLogoClick }: NavbarProps) {
               </div>
               <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-brand-500 rounded-full ring-2 ring-surface-900" />
             </div>
-            <span className="text-xl font-bold text-white tracking-tight group-hover:text-slate-200 transition-colors duration-200">
+            <span className="text-xl font-bold tracking-tight text-white transition-colors duration-200 group-hover:text-slate-200">
               Dev<span className="text-brand-500">Metrics</span>
             </span>
           </Link>
 
           {/* Nav links */}
-          <nav className="hidden sm:flex items-center gap-6">
+          <nav className="items-center hidden gap-6 sm:flex">
             <Link
               to="/features"
               id="nav-features"
-              className="text-sm text-slate-400 hover:text-white transition-colors duration-200"
+              className="text-sm transition-colors duration-200 text-slate-400 hover:text-white"
             >
               Features
             </Link>
             <Link
               to="/docs"
               id="nav-docs"
-              className="text-sm text-slate-400 hover:text-white transition-colors duration-200"
+              className="text-sm transition-colors duration-200 text-slate-400 hover:text-white"
             >
               Docs
             </Link>
             <Link
               to="/about"
               id="nav-about"
-              className="text-sm text-slate-400 hover:text-white transition-colors duration-200"
+              className="text-sm transition-colors duration-200 text-slate-400 hover:text-white"
             >
               About
             </Link>
+            {user && (
+              <Link
+                to="/tracker"
+                id="nav-tracker"
+                className="text-sm transition-colors duration-200 text-slate-400 hover:text-white"
+              >
+                Tracker
+              </Link>
+            )}
           </nav>
 
           {/* Right actions */}
           <div className="flex items-center gap-3">
-            <button
-              id="nav-signin"
-              className="hidden sm:block text-sm text-slate-400 hover:text-white transition-colors duration-200 focus:outline-none"
-            >
-              Log in
-            </button>
-            <button
-              id="nav-getstarted"
-              className="btn-primary text-sm px-4 py-2"
-            >
-              Get started
-            </button>
+            {!loading && !user ? (
+              <button
+                id="nav-signin"
+                onClick={() => signInWithGoogle()}
+                className="px-4 py-2 text-sm btn-primary"
+              >
+                Sign In
+              </button>
+            ) : loading ? (
+              <div className="text-xs text-slate-400">Loading...</div>
+            ) : (
+              <UserProfileMenu />
+            )}
           </div>
         </div>
       </div>
