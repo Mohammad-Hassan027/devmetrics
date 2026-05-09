@@ -2,6 +2,7 @@ import { Routes, Route, Link } from "react-router-dom";
 import { useDevMetrics } from "./context/DevMetricsContext";
 import Navbar from "./components/Navbar";
 import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 // Pages
 import Home from "./pages/Home";
@@ -10,6 +11,7 @@ import Docs from "./pages/Docs";
 import About from "./pages/About";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
+import QuestionTrackerPage from "./pages/QuestionTracker";
 
 export default function App() {
   const { clearUsernames } = useDevMetrics();
@@ -27,6 +29,14 @@ export default function App() {
             <Route path="/about" element={<About />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
+            <Route
+              path="/tracker"
+              element={
+                <ProtectedRoute>
+                  <QuestionTrackerPage />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </main>
 

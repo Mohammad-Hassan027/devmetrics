@@ -3,11 +3,8 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 // Minimal database type to avoid `any`. For full safety, generate types
 // using `supabase gen types typescript --project ...` and replace Database.
 
-const supabaseMeta = import.meta as any;
-const supabaseUrl = supabaseMeta.env?.VITE_SUPABASE_URL as string | undefined;
-const supabaseKey = supabaseMeta.env?.VITE_SUPABASE_PUBLISHABLE_KEY as
-  | string
-  | undefined;
+const supabaseUrl = import.meta.env?.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env?.VITE_SUPABASE_PUBLISHABLE_KEY;
 
 if (!supabaseUrl || !supabaseKey) {
   console.warn("VITE_SUPABASE_URL or VITE_SUPABASE_PUBLISHABLE_KEY missing");
