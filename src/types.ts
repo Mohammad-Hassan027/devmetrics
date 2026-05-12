@@ -82,3 +82,17 @@ export const makeIdle = <T>(): AsyncState<T> => ({
   status: "idle",
   error: null,
 });
+
+export interface ProblemEntry {
+  id: string;
+  user_id: string; // Foreign key to auth.users
+  platform: string;
+  title: string;
+  url?: string;
+  difficulty?: "Easy" | "Medium" | "Hard" | string;
+  solved_at: string; // ISO string
+  tags: string[];
+  notes?: string;
+  created_at?: string;
+  updated_at?: string;
+}
