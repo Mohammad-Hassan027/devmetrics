@@ -34,7 +34,7 @@ function mapUser(u: SupabaseUser): AuthUser {
     id: u.id,
     email: safeString(u.email),
     name: safeString((meta.full_name as unknown) ?? (meta.name as unknown)),
-    avatar_url: safeString(meta.avatar_url) ?? undefined,
+    avatar_url: safeString(meta.avatar_url) ?? safeString(meta.picture) ?? undefined,
   };
 }
 
@@ -52,7 +52,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       // Check session first to avoid "Auth session missing" error
       const { data: sessionData } = await supabase.auth.getSession();
       if (!active) return;
-      
+
       if (sessionData?.session?.user) {
         setUser(mapUser(sessionData.session.user));
       } else {
@@ -82,7 +82,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   }, []);
 
   async function signInWithGoogle() {
-    await supabase.auth.signInWithOAuth({ provider: "google" });
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: window.location.origin,
+        queryParams: {
+          access_type: "offline",
+          prompt: "consent",
+        },
+      },
+    });
   }
 
   async function signOut() {

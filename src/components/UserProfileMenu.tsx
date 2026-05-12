@@ -44,9 +44,16 @@ export default function UserProfileMenu() {
             src={user.avatar_url}
             alt={displayName}
             className="w-8 h-8 rounded-full object-cover"
+            onError={(e) => {
+              // Fallback to initials if image fails to load
+              (e.target as HTMLImageElement).style.display = 'none';
+              (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
+            }}
           />
-        ) : (
-          <div className="w-8 h-8 rounded-full bg-brand-500/20 border border-brand-500/30 flex items-center justify-center text-xs font-semibold text-brand-400">
+        ) : null}
+
+        {(!user.avatar_url || true) && (
+          <div className={`w-8 h-8 rounded-full bg-brand-500/20 border border-brand-500/30 flex items-center justify-center text-xs font-semibold text-brand-400 ${user.avatar_url ? 'hidden' : ''}`}>
             {initials}
           </div>
         )}
@@ -56,7 +63,7 @@ export default function UserProfileMenu() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 rounded-lg bg-surface-800 border border-white/10 shadow-xl z-50">
+        <div className="absolute right-0 mt-2 rounded-lg bg-surface-800 border border-white/10 shadow-xl z-50">
           <div className="px-4 py-3 border-b border-white/5">
             <p className="text-sm font-semibold text-white">{displayName}</p>
             <p className="text-xs text-slate-400">{user.email}</p>
