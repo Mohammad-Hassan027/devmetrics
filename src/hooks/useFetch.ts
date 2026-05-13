@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, useEffect } from "react";
 
 export type FetchStatus = "idle" | "loading" | "success" | "error";
 
@@ -21,6 +21,11 @@ export function useFetch<A extends unknown[], T>(
 ) {
   const [state, setState] = useState<AsyncState<T>>(makeIdle());
   const abortRef = useRef<AbortController | null>(null);
+  
+  const fetcherRef = useRef(fetcher);
+  useEffect(() => {
+    fetcherRef.current = fetcher;
+  }, [fetcher]);
 
   const run = useCallback(
     async (...args: A) => {
@@ -30,7 +35,7 @@ export function useFetch<A extends unknown[], T>(
       setState({ data: null, status: "loading", error: null });
 
       try {
-        const result = await fetcher(...args, controller.signal);
+        const result = await fetcherRef.current(...args, controller.signal);
         setState({ data: result, status: "success", error: null });
         return result;
       } catch (err: unknown) {
@@ -43,7 +48,7 @@ export function useFetch<A extends unknown[], T>(
         return Promise.reject(err);
       }
     },
-    [fetcher],
+    [],
   );
 
   const reset = useCallback(() => {
