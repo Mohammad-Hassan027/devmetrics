@@ -4,6 +4,9 @@ import { useExportDashboard } from "../hooks/useExportDashboard";
 import PlatformSection, { type StatDef } from "./PlatformSection";
 import ChartsSection from "./charts/ChartsSection";
 import DeveloperScoreCard from "./DeveloperScoreCard";
+import RecruiterReadiness from "./RecruiterReadiness";
+import InsightsPanel from "./InsightsPanel";
+import ShareProfile from "./ShareProfile";
 import { cn } from "../utils/cn";
 import { motion, AnimatePresence } from "framer-motion";
 import { Copy, Camera, CheckCircle2, RotateCcw } from "lucide-react";
@@ -62,6 +65,9 @@ export default function Dashboard({ usernames, onReset }: DashboardProps) {
 
         {/* Action buttons */}
         <div className="self-start sm:self-auto flex items-center gap-4">
+          {localUsernames && localUsernames.github && (
+            <ShareProfile usernames={localUsernames} />
+          )}
           <button
             onClick={onReset}
             disabled={isLoading}
@@ -187,10 +193,16 @@ export default function Dashboard({ usernames, onReset }: DashboardProps) {
         </AnimatePresence>
       </motion.div>
 
+      {/* ── Recruiter Readiness Score ── */}
+      <RecruiterReadiness stats={stats} isLoading={isLoading} />
+
       {/* ── Charts ── */}
       <div className="mt-8">
         <ChartsSection stats={stats} />
       </div>
+
+      {/* ── Insights Panel ── */}
+      <InsightsPanel stats={stats} isLoading={isLoading} />
     </motion.div>
   );
 }

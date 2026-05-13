@@ -54,6 +54,13 @@ export default function Navbar({ onLogoClick }: NavbarProps) {
               Features
             </Link>
             <Link
+              to="/leaderboard"
+              id="nav-leaderboard"
+              className="text-sm transition-colors duration-200 text-slate-400 hover:text-white"
+            >
+              Leaderboard
+            </Link>
+            <Link
               to="/docs"
               id="nav-docs"
               className="text-sm transition-colors duration-200 text-slate-400 hover:text-white"
