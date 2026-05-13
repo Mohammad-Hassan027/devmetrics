@@ -22,7 +22,9 @@ export const problemsService = {
   /**
    * Add a new problem entry
    */
-  async addProblem(problem: Omit<ProblemEntry, "id" | "created_at" | "updated_at">): Promise<ProblemEntry> {
+  async addProblem(
+    problem: Omit<ProblemEntry, "id" | "created_at" | "updated_at">,
+  ): Promise<ProblemEntry> {
     const { data, error } = await supabase
       .from("problems")
       .insert([problem])
@@ -39,7 +41,12 @@ export const problemsService = {
   /**
    * Update an existing problem entry
    */
-  async updateProblem(id: string, updates: Partial<Omit<ProblemEntry, "id" | "user_id" | "created_at" | "updated_at">>): Promise<ProblemEntry> {
+  async updateProblem(
+    id: string,
+    updates: Partial<
+      Omit<ProblemEntry, "id" | "user_id" | "created_at" | "updated_at">
+    >,
+  ): Promise<ProblemEntry> {
     const { data, error } = await supabase
       .from("problems")
       .update(updates)
@@ -58,14 +65,11 @@ export const problemsService = {
    * Delete a problem entry
    */
   async deleteProblem(id: string): Promise<void> {
-    const { error } = await supabase
-      .from("problems")
-      .delete()
-      .eq("id", id);
+    const { error } = await supabase.from("problems").delete().eq("id", id);
 
     if (error) {
       console.error("Error deleting problem:", error);
       throw new Error(error.message);
     }
-  }
+  },
 };
