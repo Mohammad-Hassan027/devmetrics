@@ -102,7 +102,7 @@ export default function RecruiterReadiness({
       </div>
 
       {/* Score breakdown */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-3 mb-6">
         {score.github > 0 && (
           <ScoreItem
             label="GitHub"
@@ -126,9 +126,74 @@ export default function RecruiterReadiness({
         )}
       </div>
 
-      {/* Tips */}
-      <div className="mt-6 pt-6 border-t border-white/5">
-        <div className="flex items-start gap-2">
+      {/* Breakdown and tips */}
+      <div className="pt-6 border-t border-white/5 space-y-4">
+        {/* What's contributing */}
+        <div>
+          <p className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-3">
+            Score Breakdown
+          </p>
+          <div className="space-y-2">
+            {score.github > 0 && (
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-slate-400">GitHub Activity</span>
+                <span className="text-blue-400 font-semibold">{Math.round(score.github)}%</span>
+              </div>
+            )}
+            {score.leetcode > 0 && (
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-slate-400">LeetCode Proficiency</span>
+                <span className="text-yellow-400 font-semibold">{Math.round(score.leetcode)}%</span>
+              </div>
+            )}
+            {score.gfg > 0 && (
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-slate-400">GFG Contribution</span>
+                <span className="text-green-400 font-semibold">{Math.round(score.gfg)}%</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Next steps */}
+        <div>
+          <p className="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+            Next Steps to Improve
+          </p>
+          <ul className="space-y-1 text-xs text-slate-400">
+            {percentage < 40 && (
+              <>
+                <li>• Build 2-3 public GitHub projects with documentation</li>
+                <li>• Solve 30+ LeetCode problems to strengthen DSA</li>
+                <li>• Create a compelling GitHub profile bio</li>
+              </>
+            )}
+            {percentage >= 40 && percentage < 60 && (
+              <>
+                <li>• Increase GitHub stars through quality projects</li>
+                <li>• Reach 100+ LeetCode problems solved</li>
+                <li>• Contribute to open-source projects</li>
+              </>
+            )}
+            {percentage >= 60 && percentage < 80 && (
+              <>
+                <li>• Focus on hard LeetCode problems</li>
+                <li>• Build advanced full-stack projects</li>
+                <li>• Engage with the developer community</li>
+              </>
+            )}
+            {percentage >= 80 && (
+              <>
+                <li>• Mentor junior developers</li>
+                <li>• Build system design projects</li>
+                <li>• Lead open-source initiatives</li>
+              </>
+            )}
+          </ul>
+        </div>
+
+        {/* Pro tip */}
+        <div className="flex items-start gap-2 pt-2">
           <Zap className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
           <p className="text-xs text-slate-400">
             <span className="font-semibold text-slate-300">Pro tip:</span> Share
