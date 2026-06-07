@@ -60,92 +60,152 @@ export function generateInsights(stats: DevStats): Insight[] {
   const leetcode = stats.leetcode.data;
   const gfg = stats.gfg.data;
 
-  // Check GitHub presence
-  if (!github || github.public_repos < 5) {
+  // GitHub insights
+  if (!github) {
     insights.push({
-      title: "Build More GitHub Projects",
-      description:
-        "Recruiters look for practical project experience. Having fewer than 5 public repositories limits your visibility.",
+      title: "Connect Your GitHub Account",
+      description: "GitHub is essential for showcasing your projects and contributions to recruiters.",
       priority: "high",
       actionItems: [
-        "Create 2-3 full-stack projects with proper documentation",
-        "Ensure projects have clear README files",
-        "Showcase diverse tech stacks (frontend, backend, full-stack)",
+        "Add your GitHub username to get started",
+        "Make sure your profile is public",
+        "Add a professional bio and profile picture",
       ],
     });
-  }
-
-  // Check LeetCode presence
-  if (!leetcode || leetcode.totalSolved < 50) {
+  } else if (github.public_repos < 3) {
     insights.push({
-      title: "Strengthen DSA Skills",
-      description:
-        "Problem-solving ability is crucial for technical interviews. Aim for at least 50 problems solved.",
+      title: "Build Your First Projects",
+      description: `You have ${github.public_repos} public repo(s). Aim for at least 3-5 to showcase your skills.`,
       priority: "high",
       actionItems: [
-        "Solve at least 50 LeetCode problems",
-        "Focus on medium-difficulty problems",
-        "Track your progress and maintain a streak",
+        "Create a portfolio project (e.g., todo app, weather app)",
+        "Build a full-stack project to demonstrate end-to-end skills",
+        "Ensure projects have comprehensive README files",
+      ],
+    });
+  } else if (github.total_stars === 0) {
+    insights.push({
+      title: "Make Your Projects Discoverable",
+      description: "Your projects have no stars yet. Improve visibility and quality to attract attention.",
+      priority: "medium",
+      actionItems: [
+        "Add detailed documentation and examples",
+        "Share projects on Twitter, LinkedIn, or dev.to",
+        "Contribute to trending open-source projects",
       ],
     });
   }
 
-  // Check GitHub followers/stars
-  if (github && github.followers < 10) {
+  // LeetCode insights
+  if (!leetcode) {
     insights.push({
-      title: "Improve Your GitHub Presence",
-      description:
-        "Followers and stars indicate community engagement and project quality.",
+      title: "Start Your DSA Journey",
+      description: "LeetCode helps you prepare for technical interviews and improve problem-solving skills.",
+      priority: "high",
+      actionItems: [
+        "Create a LeetCode account",
+        "Start with easy problems to build confidence",
+        "Aim to solve at least 1-2 problems daily",
+      ],
+    });
+  } else if (leetcode.totalSolved < 50) {
+    insights.push({
+      title: `Keep Grinding on LeetCode (${leetcode.totalSolved}/50)`,
+      description: "You're on the right track! Reach 50 problems to build a strong DSA foundation.",
+      priority: "high",
+      actionItems: [
+        `Solve ${50 - leetcode.totalSolved} more problems to reach 50`,
+        "Focus on medium-difficulty problems after easy ones",
+        "Review solutions and understand different approaches",
+      ],
+    });
+  } else if (leetcode.totalSolved >= 50 && leetcode.totalSolved < 150) {
+    insights.push({
+      title: `You're Making Great Progress (${leetcode.totalSolved} solved)!`,
+      description: "Continue solving more problems to reach expert level.",
       priority: "medium",
       actionItems: [
-        "Contribute to open-source projects",
-        "Share your projects on social media",
-        "Engage with the developer community",
+        "Focus on hard problems to prepare for top-tier interviews",
+        "Practice problems by topic (arrays, trees, graphs, etc.)",
+        "Track your acceptance rate and improve solution quality",
       ],
     });
   }
 
-  // Check GFG presence
-  if (!gfg || gfg.totalProblemsSolved < 50) {
+  // GitHub followers/stars insights
+  if (github && github.followers < 5) {
     insights.push({
-      title: "Leverage GeeksforGeeks",
-      description:
-        "GFG is a great resource for interview preparation and building a strong foundation.",
+      title: "Build Your GitHub Network",
+      description: "Followers indicate community recognition. Engage with the developer community.",
       priority: "medium",
       actionItems: [
-        "Solve problems on GeeksforGeeks",
-        "Focus on core DSA concepts",
-        "Track your coding score improvement",
+        "Star and contribute to projects you find interesting",
+        "Comment on and discuss issues in popular repositories",
+        "Share your learning journey on social media",
       ],
     });
   }
 
-  // Check LeetCode acceptance rate
-  if (leetcode && leetcode.acceptanceRate < 40) {
+  // GFG insights
+  if (!gfg) {
     insights.push({
-      title: "Improve Solution Quality",
-      description:
-        "Your acceptance rate suggests room for improvement. Focus on understanding problems deeply.",
+      title: "Diversify with GeeksforGeeks",
+      description: "GFG offers interview-focused problems and company-specific questions.",
       priority: "medium",
       actionItems: [
-        "Review failed submissions",
-        "Study optimal solutions",
-        "Practice similar problem patterns",
+        "Create a GeeksforGeeks account",
+        "Solve company-specific interview questions",
+        "Track your daily coding streak",
+      ],
+    });
+  } else if (gfg.totalProblemsSolved < 50) {
+    insights.push({
+      title: `Boost Your GFG Score (${gfg.totalProblemsSolved}/50)`,
+      description: "GeeksforGeeks problems are great for interview preparation.",
+      priority: "medium",
+      actionItems: [
+        `Solve ${50 - gfg.totalProblemsSolved} more problems on GFG`,
+        "Focus on company-specific interview questions",
+        "Practice problems from different difficulty levels",
+      ],
+    });
+  }
+
+  // LeetCode acceptance rate insights
+  if (leetcode && leetcode.acceptanceRate < 35) {
+    insights.push({
+      title: "Improve Your Acceptance Rate",
+      description: `Your acceptance rate is ${leetcode.acceptanceRate.toFixed(1)}%. Focus on understanding problems before coding.`,
+      priority: "medium",
+      actionItems: [
+        "Read problem statements carefully before coding",
+        "Test edge cases before submitting",
+        "Learn from accepted solutions and optimize your approach",
       ],
     });
   }
 
   // Positive reinforcement
-  if (github && github.public_repos >= 5 && leetcode && leetcode.totalSolved >= 50) {
+  if (github && github.public_repos >= 5 && leetcode && leetcode.totalSolved >= 100) {
     insights.push({
-      title: "Great Progress!",
-      description:
-        "You have a solid foundation. Continue building and refining your skills.",
+      title: "🎉 You're Interview-Ready!",
+      description: "You have a strong foundation. Focus on system design and behavioral prep now.",
       priority: "low",
       actionItems: [
-        "Contribute to open-source projects",
-        "Build more advanced projects",
-        "Mentor junior developers",
+        "Study system design patterns",
+        "Practice behavioral interview questions",
+        "Contribute to open-source to showcase leadership",
+      ],
+    });
+  } else if (github && github.public_repos >= 3 && leetcode && leetcode.totalSolved >= 50) {
+    insights.push({
+      title: "Great Foundation!",
+      description: "You're building a solid profile. Keep pushing to reach expert level.",
+      priority: "low",
+      actionItems: [
+        "Build more complex projects",
+        "Solve harder LeetCode problems",
+        "Start contributing to open-source",
       ],
     });
   }
