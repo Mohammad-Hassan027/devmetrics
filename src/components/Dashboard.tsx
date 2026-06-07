@@ -7,6 +7,7 @@ import DeveloperScoreCard from "./DeveloperScoreCard";
 import RecruiterReadiness from "./RecruiterReadiness";
 import InsightsPanel from "./InsightsPanel";
 import ShareProfile from "./ShareProfile";
+import DataFreshness from "./DataFreshness";
 import { cn } from "../utils/cn";
 import { motion, AnimatePresence } from "framer-motion";
 import { Copy, Camera, CheckCircle2, RotateCcw } from "lucide-react";
@@ -65,6 +66,7 @@ export default function Dashboard({ usernames, onReset }: DashboardProps) {
 
         {/* Action buttons */}
         <div className="self-start sm:self-auto flex items-center gap-4">
+          <DataFreshness />
           {localUsernames && localUsernames.github && (
             <ShareProfile usernames={localUsernames} />
           )}
