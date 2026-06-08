@@ -151,6 +151,17 @@ export default function Dashboard({ usernames, onReset }: DashboardProps) {
           <DeveloperScoreCard />
         </motion.div>
 
+        {/* ── Recruiter Readiness Score ── */}
+        <motion.div
+          variants={{
+            hidden: { opacity: 0, scale: 0.98 },
+            visible: { opacity: 1, scale: 1 },
+          }}
+          className="col-span-1 md:col-span-12"
+        >
+          <RecruiterReadiness stats={stats} isLoading={isLoading} />
+        </motion.div>
+
         {/* ── Platform sections (Grid items) ── */}
         <AnimatePresence mode="popLayout">
           {localUsernames.github && (
@@ -194,9 +205,6 @@ export default function Dashboard({ usernames, onReset }: DashboardProps) {
           )}
         </AnimatePresence>
       </motion.div>
-
-      {/* ── Recruiter Readiness Score ── */}
-      <RecruiterReadiness stats={stats} isLoading={isLoading} />
 
       {/* ── Charts ── */}
       <div className="mt-8">
