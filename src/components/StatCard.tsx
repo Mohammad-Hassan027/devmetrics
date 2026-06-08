@@ -97,10 +97,10 @@ export default function StatCard({
           </div>
         ) : isEmpty ? (
           <div className="space-y-1.5 pt-2">
-            <p className="text-4xl font-medium text-surface-600 tracking-tight select-none">
-              —
+            <p className="text-sm font-medium text-slate-500 tracking-tight select-none">
+              No data
             </p>
-            <p className="text-[11px] font-bold text-slate-500 uppercase tracking-[0.2em]">{label}</p>
+            <p className="text-[11px] font-bold text-slate-600 uppercase tracking-[0.2em]">{label}</p>
           </div>
         ) : (
           <div className="space-y-1.5 pt-2">
