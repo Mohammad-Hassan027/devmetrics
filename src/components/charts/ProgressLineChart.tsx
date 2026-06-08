@@ -66,8 +66,22 @@ function CustomTooltip({ active, payload, label }: TooltipProps) {
 
 const CHART_HEIGHT = 256; // px — h-64 equivalent
 
-export default function ProgressLineChart() {
+interface ProgressLineChartProps {
+  hasData?: boolean;
+}
+
+export default function ProgressLineChart({ hasData = true }: ProgressLineChartProps) {
   const { ref, width } = useChartSize();
+
+  if (!hasData) {
+    return (
+      <div className="glass-card p-6 flex flex-col gap-5 col-span-full">
+        <div className="flex items-center justify-center h-64">
+          <p className="text-slate-500 text-sm">Chart will appear once data is available</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

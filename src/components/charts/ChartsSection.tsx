@@ -49,7 +49,7 @@ export default function ChartsSection({ stats }: ChartsSectionProps) {
 
       {/* Bottom row: full-width area/line chart */}
       <div className="min-w-0">
-        <ProgressLineChart />
+        <ProgressLineChart hasData={stats.github.data || stats.leetcode.data || stats.gfg.data ? true : false} />
       </div>
     </section>
   );
