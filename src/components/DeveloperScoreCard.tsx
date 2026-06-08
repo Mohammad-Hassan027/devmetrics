@@ -95,9 +95,15 @@ export default function DeveloperScoreCard() {
             </div>
           </div>
 
-          <div className="flex items-baseline gap-4">
+          <div className="flex items-baseline gap-4 group relative">
             <span className={cn("text-7xl md:text-8xl font-medium tracking-tighter leading-none", badge.color)}>{total.toLocaleString()}</span>
-            <span className="text-slate-500 text-xs font-bold tracking-[0.25em] uppercase pb-3">Impact Score</span>
+            <div className="flex flex-col items-start pb-3">
+              <span className="text-slate-500 text-xs font-bold tracking-[0.25em] uppercase cursor-help">Impact Score</span>
+              <div className="hidden group-hover:block absolute bottom-full mb-3 bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-xs z-50 text-slate-300 w-max">
+                <p className="font-semibold mb-1">Formula:</p>
+                <p>GitHub Output + LeetCode Proficiency + GFG Contribution</p>
+              </div>
+            </div>
           </div>
 
           <p className="text-slate-400 text-lg leading-relaxed max-w-xl font-medium">{badge.description}</p>
