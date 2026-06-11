@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Share2, ArrowRight } from "lucide-react";
+import { Share2, ArrowRight, Eye, EyeOff } from "lucide-react";
 import { useDevMetrics } from "../context/DevMetricsContext";
 import Dashboard from "../components/Dashboard";
+import PublicRecruiterView from "../components/PublicRecruiterView";
 import RecruiterReadiness from "../components/RecruiterReadiness";
 import InsightsPanel from "../components/InsightsPanel";
 import { cn } from "../utils/cn";
@@ -12,6 +13,7 @@ export default function PublicProfile() {
   const [searchParams] = useSearchParams();
   const { submitUsernames, stats, isLoading } = useDevMetrics();
   const [hasInitialized, setHasInitialized] = useState(false);
+  const [showRecruiterView, setShowRecruiterView] = useState(false);
 
   useEffect(() => {
     if (hasInitialized) return;
@@ -58,6 +60,28 @@ export default function PublicProfile() {
     );
   }
 
+  if (showRecruiterView) {
+    return (
+      <div className="space-y-4">
+        <button
+          onClick={() => setShowRecruiterView(false)}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-700 hover:bg-surface-600 text-slate-300 transition-colors text-sm font-medium"
+        >
+          <EyeOff className="w-4 h-4" />
+          Back to Full View
+        </button>
+        <PublicRecruiterView
+          stats={stats}
+          usernames={{
+            github: searchParams.get("gh") || "",
+            leetcode: searchParams.get("lc") || "",
+            gfg: searchParams.get("gfg") || "",
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-5xl mx-auto space-y-8">
       {/* Header */}
@@ -78,6 +102,13 @@ export default function PublicProfile() {
         <p className="text-slate-400 text-lg max-w-2xl mx-auto">
           This profile showcases developer metrics from GitHub, LeetCode, and GeeksforGeeks.
         </p>
+        <button
+          onClick={() => setShowRecruiterView(true)}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-surface-700 hover:bg-surface-600 text-slate-300 transition-colors text-sm font-medium mt-4"
+        >
+          <Eye className="w-4 h-4" />
+          View as Recruiter
+        </button>
       </motion.div>
 
       {/* Recruiter Readiness Score */}
