@@ -5,6 +5,7 @@ import PlatformSection, { type StatDef } from "./PlatformSection";
 import ChartsSection from "./charts/ChartsSection";
 import DeveloperScoreCard from "./DeveloperScoreCard";
 import RecruiterReadiness from "./RecruiterReadiness";
+import BenchmarkingIndicators from "./BenchmarkingIndicators";
 import InsightsPanel from "./InsightsPanel";
 import ShareProfile from "./ShareProfile";
 import DataFreshness from "./DataFreshness";
@@ -210,6 +211,9 @@ export default function Dashboard({ usernames, onReset }: DashboardProps) {
       <div className="mt-8">
         <ChartsSection stats={stats} />
       </div>
+
+      {/* ── Benchmarking Indicators ── */}
+      <BenchmarkingIndicators stats={stats} />
 
       {/* ── Insights Panel ── */}
       <InsightsPanel stats={stats} isLoading={isLoading} />
