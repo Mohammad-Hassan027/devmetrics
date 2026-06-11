@@ -121,7 +121,7 @@ export default function ProblemsBarChart({ stats }: ProblemsBarChartProps) {
         <div>
           <h3 className="text-base font-bold text-white">Problems Solved</h3>
           <p className="text-slate-500 text-xs mt-0.5">
-            Breakdown by difficulty across platforms
+            Difficulty breakdown: LeetCode & GeeksforGeeks
           </p>
         </div>
         <span className="badge bg-brand-900/40 text-brand-300 border border-brand-700/30 text-[10px]">
