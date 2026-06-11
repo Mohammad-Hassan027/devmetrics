@@ -110,6 +110,28 @@ export default function DeveloperScoreCard() {
         </div>
 
         <div className="w-full lg:w-96 space-y-10">
+          {/* Tier Progression */}
+          <div className="space-y-3">
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Tier Progression</p>
+            <div className="flex items-center justify-between gap-1">
+              {['Newcomer', 'Explorer', 'Contributor', 'Expert'].map((tier, idx) => {
+                const tierOrder = { 'Newcomer': 0, 'Explorer': 1, 'Contributor': 2, 'Expert': 3 };
+                const isActive = tierOrder[tier as keyof typeof tierOrder] <= tierOrder[badge.tier as keyof typeof tierOrder];
+                return (
+                  <div key={tier} className="flex-1 flex flex-col items-center gap-1">
+                    <div className={cn(
+                      'w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all',
+                      isActive ? 'bg-brand-600 text-white' : 'bg-surface-700 text-slate-500'
+                    )}>
+                      {idx + 1}
+                    </div>
+                    <span className="text-[9px] text-slate-500 text-center leading-tight">{tier}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
           {nextTier && (
             <div className="space-y-4">
               <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-[0.2em]">
