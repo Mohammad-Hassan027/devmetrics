@@ -5,13 +5,11 @@ import { Share2, ArrowRight, Eye, EyeOff } from "lucide-react";
 import { useDevMetrics } from "../context/DevMetricsContext";
 import Dashboard from "../components/Dashboard";
 import PublicRecruiterView from "../components/PublicRecruiterView";
-import RecruiterReadiness from "../components/RecruiterReadiness";
-import InsightsPanel from "../components/InsightsPanel";
 import { cn } from "../utils/cn";
 
 export default function PublicProfile() {
   const [searchParams] = useSearchParams();
-  const { submitUsernames, stats, isLoading } = useDevMetrics();
+  const { submitUsernames, stats } = useDevMetrics();
   const [hasInitialized, setHasInitialized] = useState(false);
   const [showRecruiterView, setShowRecruiterView] = useState(false);
 
@@ -111,10 +109,7 @@ export default function PublicProfile() {
         </button>
       </motion.div>
 
-      {/* Recruiter Readiness Score */}
-      <RecruiterReadiness stats={stats} isLoading={isLoading} />
-
-      {/* Main Dashboard */}
+      {/* Main Dashboard — includes RecruiterReadiness, BenchmarkingIndicators, InsightsPanel internally */}
       <div>
         <Dashboard
           usernames={{ github: gh || "", leetcode: lc || "", gfg: gfg || "" }}
@@ -124,8 +119,6 @@ export default function PublicProfile() {
         />
       </div>
 
-      {/* Insights */}
-      <InsightsPanel stats={stats} isLoading={isLoading} />
 
       {/* Footer CTA */}
       <motion.div

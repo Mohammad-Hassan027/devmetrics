@@ -21,7 +21,14 @@ export function useFetch<A extends unknown[], T>(
 ) {
   const [state, setState] = useState<AsyncState<T>>(makeIdle());
   const abortRef = useRef<AbortController | null>(null);
-  
+
+  /**
+   * "Latest ref" pattern (intentional): fetcherRef always holds the most recent
+   * fetcher function without being listed in `run`'s dependency array.
+   * This prevents `run` from being recreated on every render while still
+   * calling the current fetcher at invocation time — safe because `run` is
+   * only ever called from user interaction, which happens after the effect fires.
+   */
   const fetcherRef = useRef(fetcher);
   useEffect(() => {
     fetcherRef.current = fetcher;

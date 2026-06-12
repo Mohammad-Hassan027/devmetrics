@@ -1,5 +1,14 @@
 import type { GitHubData, LeetCodeData, GFGData } from "../types";
 
+/**
+ * scoreEngine — "Impact Score" system (unbounded).
+ *
+ * This is SEPARATE from the 0–100 "Recruiter Readiness" score in scoreCalculator.ts.
+ * The Impact Score has no ceiling and grows as the developer's output grows,
+ * enabling meaningful badge tiers (Newcomer → Legend) without an arbitrary cap.
+ * Weights are tuned to reward depth (hard problems, high stars) over breadth.
+ */
+
 export type BadgeTier =
   | "Newcomer"
   | "Explorer"
@@ -129,7 +138,11 @@ export function calcLeetCodeScore(data: LeetCodeData | null): number {
 
 export function calcGFGScore(data: GFGData | null): number {
   if (!data) return 0;
-  const streak = parseInt(data.currentStreak ?? "0", 10) || 0;
+  // currentStreak may arrive as a string ("15") or a number (15) from the API
+  const streak =
+    typeof data.currentStreak === "number"
+      ? data.currentStreak
+      : parseInt(String(data.currentStreak ?? "0"), 10) || 0;
   return Math.round(
     clamp(data.totalProblemsSolved * W.gfgProblem, 400) +
       clamp(data.codingScore * W.codingScore, 200) +

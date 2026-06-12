@@ -1,7 +1,8 @@
 import type { DevStats } from "../../types";
 import ProblemsBarChart from "./ProblemsBarChart";
 import DistributionPieChart from "./DistributionPieChart";
-import ProgressLineChart from "./ProgressLineChart";
+import DifficultyBreakdownChart from "./DifficultyBreakdownChart";
+import TechStackChart from "./TechStackChart";
 
 interface ChartsSectionProps {
   stats: DevStats;
@@ -47,9 +48,14 @@ export default function ChartsSection({ stats }: ChartsSectionProps) {
         </div>
       </div>
 
-      {/* Bottom row: full-width area/line chart */}
-      <div className="min-w-0">
-        <ProgressLineChart hasData={stats.github.data || stats.leetcode.data || stats.gfg.data ? true : false} />
+      {/* Bottom row: difficulty breakdown (full-width grouped bar) + tech stack donut */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="min-w-0 md:col-span-1">
+          <DifficultyBreakdownChart stats={stats} />
+        </div>
+        <div className="min-w-0">
+          <TechStackChart stats={stats} />
+        </div>
       </div>
     </section>
   );

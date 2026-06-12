@@ -8,8 +8,17 @@ export interface ScoreBreakdown {
 }
 
 /**
- * Calculates a portfolio score based on GitHub, LeetCode, and GFG metrics.
- * Score is out of 100 and represents "Recruiter Readiness".
+ * Calculates a "Recruiter Readiness" portfolio score on a 0–100 scale.
+ *
+ * This is a SEPARATE system from the unbounded "Impact Score" in scoreEngine.ts.
+ * Recruiter Readiness is intentionally capped at 100 and weighted towards
+ * signals recruiters care about most: repo count, followers, stars, and
+ * overall problem-solving breadth.
+ *
+ * Score breakdown:
+ *   GitHub  — 0 to 40 points
+ *   LeetCode — 0 to 35 points
+ *   GFG     — 0 to 25 points
  */
 export function calculatePortfolioScore(stats: DevStats): ScoreBreakdown {
   let github = 0;
@@ -27,8 +36,8 @@ export function calculatePortfolioScore(stats: DevStats): ScoreBreakdown {
   // LeetCode Score (0-35 points)
   if (stats.leetcode.data) {
     const { totalSolved = 0, acceptanceRate = 0 } = stats.leetcode.data;
-    github += Math.min(totalSolved / 10, 20); // Up to 20 points for problems solved
-    github += Math.min(acceptanceRate / 3, 15); // Up to 15 points for acceptance rate
+    leetcode += Math.min(totalSolved / 10, 20); // Up to 20 points for problems solved
+    leetcode += Math.min(acceptanceRate / 3, 15); // Up to 15 points for acceptance rate
   }
 
   // GFG Score (0-25 points)

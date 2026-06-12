@@ -52,11 +52,10 @@ export default function UserProfileMenu() {
           />
         ) : null}
 
-        {(!user.avatar_url || true) && (
-          <div className={`w-8 h-8 rounded-full bg-brand-500/20 border border-brand-500/30 flex items-center justify-center text-xs font-semibold text-brand-400 ${user.avatar_url ? 'hidden' : ''}`}>
-            {initials}
-          </div>
-        )}
+        {/* Initials fallback: always rendered but hidden when avatar loads */}
+        <div className={`w-8 h-8 rounded-full bg-brand-500/20 border border-brand-500/30 flex items-center justify-center text-xs font-semibold text-brand-400 ${user.avatar_url ? 'hidden' : ''}`}>
+          {initials}
+        </div>
         <span className="text-sm text-slate-300 hidden sm:inline">
           {displayName}
         </span>

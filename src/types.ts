@@ -15,6 +15,8 @@ export interface GitHubData {
   following: number;
   total_stars?: number;
   total_commits?: number;
+  /** Language → byte-count map aggregated from the user's repos */
+  languages?: Record<string, number>;
 }
 
 export interface LeetCodeSubmitStats {
@@ -46,9 +48,10 @@ export interface GFGData {
   userName: string;
   profilePicture: string;
   institute: string;
-  instituteRank: string;
-  currentStreak: string;
-  maxStreak: string;
+  instituteRank: string | number;
+  /** API may return streak as a string ("15") or a number (15) */
+  currentStreak: string | number;
+  maxStreak: string | number;
   codingScore: number;
   monthlyScore: number;
   totalProblemsSolved: number;

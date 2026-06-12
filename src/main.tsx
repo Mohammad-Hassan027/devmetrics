@@ -4,13 +4,16 @@ import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import App from "./App";
 import { DevMetricsProvider } from "./context/DevMetricsContext";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
-      <DevMetricsProvider>
-        <App />
-      </DevMetricsProvider>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <DevMetricsProvider>
+          <App />
+        </DevMetricsProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   </StrictMode>,
 );
