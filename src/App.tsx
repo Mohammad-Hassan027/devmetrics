@@ -1,7 +1,6 @@
 import { Routes, Route, Link } from "react-router-dom";
 import { useDevMetrics } from "./context/DevMetricsContext";
 import Navbar from "./components/Navbar";
-import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 // Pages
@@ -20,32 +19,30 @@ export default function App() {
 
   return (
     <div className="relative z-0 flex flex-col min-h-screen">
-      <AuthProvider>
-        <Navbar onLogoClick={clearUsernames} />
+      <Navbar onLogoClick={clearUsernames} />
 
-        <main className="container relative z-10 flex-1 px-4 py-10 mx-auto sm:px-6 lg:px-8 max-w-7xl">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/features" element={<Features />} />
-            <Route path="/docs" element={<Docs />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/leaderboard" element={<Leaderboard />} />
-            <Route path="/p" element={<PublicProfile />} />
-            <Route
-              path="/tracker"
-              element={
-                <ProtectedRoute>
-                  <QuestionTrackerPage />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </main>
+      <main className="container relative z-10 flex-1 px-4 py-10 mx-auto sm:px-6 lg:px-8 max-w-7xl">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/features" element={<Features />} />
+          <Route path="/docs" element={<Docs />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/p" element={<PublicProfile />} />
+          <Route
+            path="/tracker"
+            element={
+              <ProtectedRoute>
+                <QuestionTrackerPage />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </main>
 
-        <Footer />
-      </AuthProvider>
+      <Footer />
     </div>
   );
 }

@@ -56,6 +56,48 @@ export type Database = {
         }
         Relationships: []
       }
+      metric_snapshots: {
+        Row: {
+          user_id: string
+          display_name: string | null
+          avatar_url: string | null
+          github_username: string | null
+          leetcode_username: string | null
+          gfg_username: string | null
+          github_score: number
+          leetcode_score: number
+          gfg_score: number
+          total_score: number
+          updated_at: string
+        }
+        Insert: {
+          user_id: string
+          display_name?: string | null
+          avatar_url?: string | null
+          github_username?: string | null
+          leetcode_username?: string | null
+          gfg_username?: string | null
+          github_score?: number
+          leetcode_score?: number
+          gfg_score?: number
+          total_score?: number
+          updated_at?: string
+        }
+        Update: {
+          user_id?: string
+          display_name?: string | null
+          avatar_url?: string | null
+          github_username?: string | null
+          leetcode_username?: string | null
+          gfg_username?: string | null
+          github_score?: number
+          leetcode_score?: number
+          gfg_score?: number
+          total_score?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

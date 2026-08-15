@@ -1,98 +1,38 @@
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Trophy, Medal, Zap } from "lucide-react";
 import { cn } from "../utils/cn";
-
-interface LeaderboardEntry {
-  rank: number;
-  name: string;
-  username: string;
-  score: number;
-  github: number;
-  leetcode: number;
-  gfg: number;
-  avatar?: string;
-  badge?: string;
-}
-
-// Mock data - in a real app, this would come from a backend
-const mockLeaderboard: LeaderboardEntry[] = [
-  {
-    rank: 1,
-    name: "Alex Chen",
-    username: "alexchen",
-    score: 95,
-    github: 35,
-    leetcode: 35,
-    gfg: 25,
-    badge: "🚀 Rising Star",
-  },
-  {
-    rank: 2,
-    name: "Sarah Johnson",
-    username: "sarahjohnson",
-    score: 88,
-    github: 32,
-    leetcode: 30,
-    gfg: 26,
-    badge: "⭐ Top Contributor",
-  },
-  {
-    rank: 3,
-    name: "Mike Rodriguez",
-    username: "mrodriguez",
-    score: 82,
-    github: 30,
-    leetcode: 28,
-    gfg: 24,
-  },
-  {
-    rank: 4,
-    name: "Emma Wilson",
-    username: "emmawilson",
-    score: 76,
-    github: 28,
-    leetcode: 25,
-    gfg: 23,
-  },
-  {
-    rank: 5,
-    name: "James Liu",
-    username: "jamesliu",
-    score: 71,
-    github: 26,
-    leetcode: 22,
-    gfg: 23,
-  },
-  {
-    rank: 6,
-    name: "Lisa Park",
-    username: "lisapark",
-    score: 68,
-    github: 24,
-    leetcode: 21,
-    gfg: 23,
-  },
-  {
-    rank: 7,
-    name: "David Brown",
-    username: "davidbrown",
-    score: 65,
-    github: 22,
-    leetcode: 20,
-    gfg: 23,
-  },
-  {
-    rank: 8,
-    name: "Sophie Martin",
-    username: "sophiemartin",
-    score: 62,
-    github: 20,
-    leetcode: 19,
-    gfg: 23,
-  },
-];
+import {
+  getLeaderboard,
+  type LeaderboardEntry,
+} from "../services/metricSnapshots";
 
 export default function Leaderboard() {
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+
+    void getLeaderboard()
+      .then((entries) => {
+        if (active) setLeaderboard(entries);
+      })
+      .catch((cause: unknown) => {
+        if (active) {
+          setError(cause instanceof Error ? cause.message : "Unable to load rankings");
+        }
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       {/* Header */}
@@ -122,7 +62,7 @@ export default function Leaderboard() {
         transition={{ delay: 0.1 }}
         className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12"
       >
-        {mockLeaderboard.slice(0, 3).map((entry, idx) => (
+        {leaderboard.slice(0, 3).map((entry, idx) => (
           <PodiumCard key={entry.rank} entry={entry} position={idx} />
         ))}
       </motion.div>
@@ -159,9 +99,9 @@ export default function Leaderboard() {
               </tr>
             </thead>
             <tbody>
-              {mockLeaderboard.map((entry, idx) => (
-                <motion.tr
-                  key={entry.rank}
+              {leaderboard.map((entry, idx) => (
+              <motion.tr
+                key={entry.username}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.3 + idx * 0.05 }}
@@ -210,6 +150,13 @@ export default function Leaderboard() {
                   </td>
                 </motion.tr>
               ))}
+              {!loading && leaderboard.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="px-6 py-12 text-center text-slate-400">
+                    {error ?? "No published metric snapshots yet. Refresh your dashboard after signing in to appear here."}
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -230,7 +177,7 @@ export default function Leaderboard() {
         <InfoCard
           icon="🏆"
           title="Updated Weekly"
-          description="Rankings are updated every week to reflect the latest developer metrics and contributions."
+          description="Rankings are built from persisted metric snapshots and change when developers refresh their profiles."
         />
         <InfoCard
           icon="🚀"

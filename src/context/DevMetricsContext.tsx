@@ -10,8 +10,11 @@ import {
 import { useGitHub } from "../hooks/useGitHub";
 import { useLeetCode } from "../hooks/useLeetCode";
 import { useGFG } from "../hooks/useGFG";
+import { useAuth } from "./AuthContext";
 import type { Usernames, DevStats, FetchStatus } from "../types";
 import { makeIdle } from "../types";
+import { computeScore } from "../utils/scoreEngine";
+import { saveMetricSnapshot } from "../services/metricSnapshots";
 
 export interface DevMetricsContextValue {
   /** Currently active usernames. null = form not yet submitted. */
@@ -64,6 +67,7 @@ interface DevMetricsProviderProps {
 
 export function DevMetricsProvider({ children }: DevMetricsProviderProps) {
   const [usernames, setUsernames] = useState<Usernames | null>(null);
+  const { user } = useAuth();
 
   const github = useGitHub();
   const leetcode = useLeetCode();
@@ -155,6 +159,40 @@ export function DevMetricsProvider({ children }: DevMetricsProviderProps) {
         : hasData
           ? "success"
           : "idle";
+
+  // Store one normalized snapshot for the authenticated user. The debounce
+  // prevents three separate writes when the platform requests finish close
+  // together, while keeping leaderboard data available for later reads.
+  useEffect(() => {
+    if (!user?.id || !usernames || !hasData) return;
+
+    const score = computeScore(github.data, leetcode.data, gfg.data);
+    const timeout = window.setTimeout(() => {
+      void saveMetricSnapshot({
+        userId: user.id,
+        displayName: github.data?.name ?? user.name ?? null,
+        avatarUrl: github.data?.avatar_url ?? user.avatar_url ?? null,
+        usernames,
+        githubScore: score.github,
+        leetcodeScore: score.leetcode,
+        gfgScore: score.gfg,
+        totalScore: score.total,
+      }).catch((error: unknown) => {
+        // Persistence is additive; a database outage must not break the live
+        // dashboard, which is still backed by the platform APIs and cache.
+        console.error("Unable to persist metric snapshot:", error);
+      });
+    }, 500);
+
+    return () => window.clearTimeout(timeout);
+  }, [
+    user?.id,
+    usernames,
+    hasData,
+    github.data,
+    leetcode.data,
+    gfg.data,
+  ]);
 
   const value = useMemo<DevMetricsContextValue>(
     () => ({
