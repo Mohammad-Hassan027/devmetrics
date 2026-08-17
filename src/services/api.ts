@@ -2,12 +2,13 @@ import axios from "axios";
 import type { GitHubData, LeetCodeData, GFGData } from "../types";
 
 // ── API clients ────────────────────────────────────────────────────────────────
-
-const githubClient = axios.create({
-  baseURL: "https://api.github.com",
-  timeout: 10_000,
-  headers: { Accept: "application/vnd.github.v3+json" },
-});
+// All platform fetching is now routed through the same-origin Vercel Function
+// proxy (/api/metrics/:platform). The proxy owns platform credentials and a
+// shared server cache, so browser visitors never consume the GitHub public
+// rate limit directly. Legacy direct clients are kept only where no proxy
+// route exists yet.
+const metricsClient = axios.create({ timeout: 15_000 });
+const metricsUrl = (platform: string) => `/api/metrics/${platform}`;
 
 const leetcodeClient = axios.create({
   baseURL: "https://alfa-leetcode-api.onrender.com",
@@ -90,54 +91,17 @@ function isGitHubShape(obj: unknown): obj is GitHubData {
 }
 
 // ── GitHub ─────────────────────────────────────────────────────────────────────
-
-const GITHUB_REPOS_PAGE_SIZE = 100;
-
-type GitHubRepository = {
-  stargazers_count?: number;
-  language?: string | null;
-};
-
-async function fetchAllGitHubRepositories(
-  username: string,
-  signal?: AbortSignal,
-): Promise<GitHubRepository[]> {
-  const repositories: GitHubRepository[] = [];
-  let page = 1;
-
-  // REST pagination is intentionally handled here rather than in the UI. This
-  // keeps all consumers consistent and prevents silently under-counting users
-  // with more than 100 repositories.
-  while (true) {
-    const response = await githubClient.get<GitHubRepository[]>(
-      `/users/${encodeURIComponent(username)}/repos`,
-      {
-        params: {
-          per_page: GITHUB_REPOS_PAGE_SIZE,
-          page,
-          sort: "updated",
-        },
-        signal,
-      },
-    );
-
-    const pageRepositories = Array.isArray(response.data)
-      ? response.data
-      : [];
-    repositories.push(...pageRepositories);
-
-    if (pageRepositories.length < GITHUB_REPOS_PAGE_SIZE) break;
-    page += 1;
-  }
-
-  return repositories;
-}
+// Server-side note: repository pagination/star/language aggregation moved to
+// api/metrics/github.ts (single GraphQL call). The client no longer walks REST
+// pages directly.
 
 /**
- * Fetches GitHub user profile and aggregates stars and languages from every
- * repository page. Results are cached in localStorage for 15 minutes so that
- * repeated visits across tabs and browser sessions do not consume the public
- * GitHub rate limit unnecessarily.
+ * Fetches GitHub user profile, aggregated stars, commit contributions, and
+ * languages from the server-side proxy (/api/metrics/github). The proxy owns
+ * the GitHub token, a shared cache, and GraphQL-based aggregation, so repeated
+ * visits across tabs and browser sessions do not consume the GitHub rate
+ * limit. A 15-minute localStorage layer remains in front of the proxy for
+ * instant tab-switch loads.
  */
 export const fetchGitHub = async (
   username: string,
@@ -148,36 +112,18 @@ export const fetchGitHub = async (
   const cached = cacheGet<GitHubData>(cacheKey);
   if (cached) return cached;
 
-  const [userRes, repos] = await Promise.all([
-    githubClient.get(`/users/${encodeURIComponent(normalizedUsername)}`, {
-      signal,
-    }),
-    fetchAllGitHubRepositories(normalizedUsername, signal),
-  ]);
+  const res = await metricsClient.get(metricsUrl("github"), {
+    params: { username: normalizedUsername },
+    signal,
+  });
 
-  const data = userRes.data;
-  if (!isGitHubShape(data)) throw new Error("Unexpected GitHub response shape");
-
-  const total_stars = repos.reduce(
-    (sum, repository) => sum + (repository.stargazers_count ?? 0),
-    0,
-  );
-  const languages: Record<string, number> = {};
-  for (const repository of repos) {
-    if (repository.language) {
-      languages[repository.language] =
-        (languages[repository.language] ?? 0) + 1;
-    }
+  const data = res.data?.data as GitHubData | undefined;
+  if (!data || !isGitHubShape(data)) {
+    throw new Error("Unexpected GitHub response shape");
   }
 
-  const result: GitHubData = {
-    ...(data as GitHubData),
-    total_stars,
-    languages,
-  };
-
-  cacheSet(cacheKey, result);
-  return result;
+  cacheSet(cacheKey, data);
+  return data;
 };
 
 // ── LeetCode ───────────────────────────────────────────────────────────────────
@@ -237,6 +183,9 @@ export const extractErrorMessage = (err: unknown): string => {
       return "Rate limited — try again later";
     }
     if (err.code === "ECONNABORTED") return "Request timed out";
+    if (err.response?.status === 503) {
+      return "Metrics service temporarily unavailable — try again shortly";
+    }
     return (
       (err.response?.data?.message as string) ?? err.message ?? "Unknown error"
     );

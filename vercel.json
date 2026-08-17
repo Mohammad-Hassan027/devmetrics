@@ -3,10 +3,19 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
+      "source": "/api/metrics/:platform",
+      "destination": "/api/metrics/:platform"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
   ],
+  "functions": {
+    "api/metrics/*.ts": {
+      "maxDuration": 30
+    }
+  },
   "headers": [
     {
       "source": "/assets/(.*)",
